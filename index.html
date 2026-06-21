@@ -56,7 +56,9 @@
   .sub{font-family:var(--mono);font-size:10px;color:rgba(234,240,255,.72);letter-spacing:.14em;text-transform:uppercase;margin-top:3px}
   .zclock{font-family:var(--mono);font-size:13px;color:#bff7da;letter-spacing:.06em;font-variant-numeric:tabular-nums;
     border:1px solid rgba(39,213,136,.4);border-radius:8px;padding:6px 10px;white-space:nowrap;
-    background:rgba(39,213,136,.08);box-shadow:0 0 18px -4px rgba(39,213,136,.5),inset 0 0 12px -6px rgba(39,213,136,.6)}
+    background:rgba(39,213,136,.08);box-shadow:0 0 18px -4px rgba(39,213,136,.5),inset 0 0 12px -6px rgba(39,213,136,.6);
+    display:flex;flex-direction:column;align-items:flex-end;gap:1px;line-height:1.25}
+  .zclock .zlocal{font-size:10px;color:#7fb0a0;letter-spacing:.04em}
   .zclock small{color:#6fe6ad;margin-right:2px}
 
   .bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
@@ -94,6 +96,51 @@
   .drop.over{border-color:var(--tyellow);color:var(--tyellow);background:rgba(255,190,32,.07);box-shadow:0 0 26px -6px rgba(255,190,32,.5)}
 
   .summary{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:18px 0 8px;letter-spacing:.04em}
+  .countdown{color:var(--go);font-weight:600}
+  .countdown.cd-past{color:var(--nogo)}
+  .controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:6px 0 2px}
+  .chip{font-family:var(--mono);font-size:11px;letter-spacing:.03em;cursor:pointer;color:var(--muted);
+    background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:6px 11px;transition:.15s}
+  .chip:hover{border-color:var(--tblue-lite);color:var(--txt)}
+  .chip.on{background:linear-gradient(135deg,var(--tyellow),var(--gold));color:#241a00;border-color:transparent;font-weight:700}
+  .cnote{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-left:auto}
+  .js-copy{margin-top:2px}
+  .manual{border:1px solid var(--line2);border-radius:12px;padding:12px;background:var(--glass);display:grid;gap:11px}
+  .manual .msec{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.5}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px}
+  .flights{margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
+  .fhdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+  .f-auto{padding:7px 13px;font-size:12px;white-space:nowrap}
+  .f-status{font-family:var(--mono);font-size:11px;margin:0 0 9px;padding:8px 10px;border-radius:8px;line-height:1.5;
+    border:1px solid var(--line2);background:rgba(0,0,0,.22);color:var(--muted)}
+  .f-status.ok{border-color:rgba(39,213,136,.4);background:rgba(39,213,136,.08);color:#bff7da}
+  .f-status.err{border-color:rgba(245,179,66,.4);background:rgba(245,179,66,.08);color:#ffe1ac}
+  .fadd{display:grid;grid-template-columns:48px 64px 1fr 64px 64px 84px 64px auto;gap:6px;align-items:center}
+  .fadd input,.fadd select{padding:8px 7px;font-size:12px}
+  .fadd .f-add{padding:8px 12px;white-space:nowrap}
+  @media(max-width:560px){.fadd{grid-template-columns:1fr 1fr 1fr}.fadd .f-add{grid-column:1/-1}}
+  .flist{display:grid;gap:9px;margin-top:11px}
+  .fstrip{border:1px solid var(--line2);border-left-width:3px;border-radius:11px;padding:10px 12px;background:var(--panel)}
+  .fstrip.go{border-left-color:var(--go)} .fstrip.cau{border-left-color:var(--cau)} .fstrip.nogo{border-left-color:var(--nogo)}
+  .fhd{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px}
+  .flogo{width:22px;height:22px;border-radius:5px;object-fit:contain;background:#fff;padding:1px}
+  .fpill{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:20px;font-weight:700}
+  .fpill.go{background:rgba(39,213,136,.16);color:var(--go)} .fpill.cau{background:rgba(245,179,66,.16);color:var(--cau)} .fpill.nogo{background:rgba(255,90,90,.16);color:var(--nogo)}
+  .fpill.nonstop{background:rgba(39,213,136,.9);color:#04130b;font-weight:800}
+  .fpill.stop{background:var(--line2);color:var(--muted)}
+  .fbanner{border:1px solid rgba(39,213,136,.55);border-radius:12px;padding:12px 13px;margin-bottom:11px;
+    background:linear-gradient(135deg,rgba(39,213,136,.16),rgba(39,213,136,.05));box-shadow:0 0 26px -8px rgba(39,213,136,.55)}
+  .fbk{font-family:var(--mono);font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--go);text-transform:uppercase}
+  .fbv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:#dffaed;margin-top:7px}
+  .fbn{font-family:var(--mono);font-size:10.5px;color:#8fcfb1;margin-top:6px}
+  .fstrip.pin{border-color:rgba(39,213,136,.5);box-shadow:0 0 18px -10px rgba(39,213,136,.6)}
+  .fbest{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:#241a00;background:linear-gradient(135deg,var(--tyellow),var(--gold));padding:3px 8px;border-radius:20px;font-weight:700}
+  .frm{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:2px 4px}
+  .frm:hover{color:var(--nogo)}
+  .frt{font-family:var(--mono);font-size:11.5px;color:var(--txt);margin-top:7px;letter-spacing:.03em}
+  .ftimes{display:flex;flex-wrap:wrap;gap:4px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
+  .ftimes b{color:#bff7da}
+  .fnote{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:6px;line-height:1.5}
   .status{font-family:var(--mono);font-size:11.5px;margin-top:9px;padding:10px 12px;border-radius:9px;line-height:1.5;
     border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09);color:#bcd8ff}
   .status.work{border-color:rgba(255,206,74,.45);background:rgba(255,206,74,.09);color:var(--cau)}
@@ -165,12 +212,6 @@
   .otrow select{width:auto;padding:6px 8px;font-size:11.5px}
   .otrow .otsub{color:var(--dim)}
 
-  .eval{border:1px solid var(--line2);border-radius:12px;padding:12px;background:linear-gradient(180deg,rgba(0,73,143,.12),rgba(33,46,103,.06))}
-  .eval .row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .eval .row3{display:grid;grid-template-columns:1.3fr 1fr;gap:9px;align-items:end}
-  .verdict-eval{font-family:var(--mono);font-size:12px;margin-top:10px;padding:10px 11px;border-radius:8px;
-    border:1px solid var(--line2);line-height:1.5;background:rgba(0,0,0,.22)}
-  .verdict-eval .big{font-size:13px;font-weight:700;letter-spacing:.04em}
   .net{font-family:var(--mono);font-size:15px;color:#7ef0b6;font-weight:700;text-shadow:0 0 14px rgba(39,213,136,.4);font-variant-numeric:tabular-nums}
 
   .empty{border:1px dashed var(--line2);border-radius:14px;padding:36px 16px;text-align:center;
@@ -205,6 +246,7 @@
       ↥ Open .eml / .pdf
     </label>
     <button class="btn" id="pasteBtn">⌨ Paste text</button>
+    <button class="btn" id="manualBtn">✎ Manual</button>
     <button class="btn ghost" id="sampleBtn">▷ Load sample</button>
     <button class="btn ghost" id="clearBtn">✕ Clear</button>
   </div>
@@ -220,6 +262,15 @@
       <div class="field">
         <label>Per diem $/hr on TAFB (≈2026: $3.15 CONUS / $3.90 OCONUS, +$0.10/yr)</label>
         <input id="perdiem" type="number" step="0.05" value="3.90">
+      </div>
+      <div class="field">
+        <label>Local time zone (shown next to Zulu)</label>
+        <select id="tz"></select>
+      </div>
+      <div class="field">
+        <label>Auto-search backend — your Cloudflare Worker URL (optional)</label>
+        <input id="worker" type="url" placeholder="https://ot-flights.you.workers.dev" autocomplete="off" spellcheck="false">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px">Leave blank to log flights by hand. With a URL set, each trip gets a 🔎 Auto-search button.</div>
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
@@ -238,13 +289,32 @@
     <button class="btn solid" id="runPaste" style="margin-top:8px">Analyze</button>
   </div>
 
+  <div id="manualWrap" style="display:none;margin-top:8px">
+    <div class="manual">
+      <div class="msec">Enter a trip by hand — use when a PDF won't read. Times are Zulu.</div>
+      <div class="mgrid">
+        <div class="field"><label>Commute to (base IATA)</label><input id="m-base" maxlength="4" placeholder="ORD" style="text-transform:uppercase"></div>
+        <div class="field"><label>Report date (Zulu)</label><input id="m-date" type="date"></div>
+        <div class="field"><label>Report time (Zulu HHMM)</label><input id="m-time" inputmode="numeric" maxlength="4" placeholder="2030"></div>
+      </div>
+      <div class="mgrid">
+        <div class="field"><label>Credit hrs</label><input id="m-credit" inputmode="decimal" placeholder="13.08"></div>
+        <div class="field"><label>Block hrs</label><input id="m-block" inputmode="decimal" placeholder="8.5"></div>
+        <div class="field"><label>CRT hrs</label><input id="m-crt" inputmode="decimal" placeholder="8.89"></div>
+        <div class="field"><label>TAFB hrs</label><input id="m-tafb" inputmode="decimal" placeholder="44"></div>
+      </div>
+      <div id="m-err" class="status err" style="display:none"></div>
+      <button class="btn solid" id="runManual" style="margin-top:4px">Analyze</button>
+    </div>
+  </div>
+
   <div class="drop" id="drop">Drop an .eml or Outlook .pdf here, or use the buttons above</div>
   <div id="status" class="status" style="display:none"></div>
 
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 9 · 2026-06-20 · PDF whitespace fix + fleet/seat/gateway config</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 15 · 2026-06-20 · nonstop-fits banner + passenger-only (cargo filtered)</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -272,7 +342,13 @@ const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,De
 const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
-const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}] };
+const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:'',
+  gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}],
+  sortByPay:false, mySeatOnly:false, hidePast:false };
+const LS_KEY='otcc_cfg_v1';
+function saveCfg(){try{localStorage.setItem(LS_KEY,JSON.stringify(CFG));}catch(e){}}
+function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){}}
+loadCfg();
 
 function parseZ(s){const m=s.trim().match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
   return m?Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0)):null;}
@@ -358,7 +434,15 @@ function cost(t,rate,pd,bonusHrs){
 /* ============ formatting ============ */
 const fz=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}z`;};
 const fzShort=ms=>{const d=new Date(ms);return `${DOW[d.getUTCDay()]} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}z`;};
+const zt=ms=>{const d=new Date(ms);return `${p(d.getUTCHours())}${p(d.getUTCMinutes())}z`;};
 const dateStr=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())}`;};
+function flocal(ms){
+  try{
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:CFG.tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZoneName:'short'}).formatToParts(new Date(ms));
+    const g=t=>(parts.find(p=>p.type===t)||{}).value||'';
+    return `${g('weekday')} ${g('hour')}${g('minute')} ${g('timeZoneName')}`;
+  }catch(e){return '';}
+}
 const p=n=>String(n).padStart(2,'0');
 const dur=mins=>{const s=mins<0?'-':'';mins=Math.abs(mins);return `${s}${Math.floor(mins/60)}h${p(mins%60)}`;};
 const gflights=(gw,dest,date)=>`https://www.google.com/travel/flights?q=`+encodeURIComponent(`Flights to ${dest} from ${gw} on ${date}`);
@@ -382,10 +466,35 @@ function render(parsed){
     out.appendChild(w);}
   const head=document.createElement('div'); head.className='summary';
   head.innerHTML=`${parsed.trips.length} trip${parsed.trips.length>1?'s':''} parsed`+
-    (parsed.closeMs?` · bidding closes ${fz(parsed.closeMs)}`:'')+` · pay @ ${CFG.fleet} ${CFG.seat} yr${CFG.yos} ($${rate}/hr)`;
+    (parsed.closeMs?` · bidding closes ${fz(parsed.closeMs)} · <span class="countdown" data-until="${parsed.closeMs}" data-label="close"></span>`:'')+
+    ` · ${CFG.fleet} ${CFG.seat} yr${CFG.yos} ($${rate}/hr)`;
   out.appendChild(head);
 
-  parsed.trips.forEach((t,idx)=>{
+  // prepare + filter + sort
+  const grossOf=t=>cost(t,rate,CFG.perDiem,bonusHours(1,t.days||Math.max(1,Math.ceil((t.tafb||24)/24)))).gross;
+  let rows=parsed.trips.filter(t=>!analyze(t).error);
+  const total=rows.length;
+  rows=rows.filter(t=>!(CFG.mySeatOnly&&t.seat!==CFG.seat) && !(CFG.hidePast&&Date.now()>=analyze(t).anchorMs));
+  if(CFG.sortByPay) rows.sort((x,y)=>grossOf(y)-grossOf(x));
+
+  if(total>1){
+    const ctr=document.createElement('div'); ctr.className='controls';
+    ctr.innerHTML=`<button class="chip${CFG.sortByPay?' on':''}" data-act="sort">⇅ sort by pay</button>`+
+      `<button class="chip${CFG.mySeatOnly?' on':''}" data-act="seat">${CFG.seat} only</button>`+
+      `<button class="chip${CFG.hidePast?' on':''}" data-act="past">hide expired</button>`+
+      `<span class="cnote">${rows.length} of ${total}</span>`;
+    out.appendChild(ctr);
+    ctr.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{
+      const a=b.dataset.act;
+      if(a==='sort')CFG.sortByPay=!CFG.sortByPay;
+      if(a==='seat')CFG.mySeatOnly=!CFG.mySeatOnly;
+      if(a==='past')CFG.hidePast=!CFG.hidePast;
+      saveCfg(); reRender();
+    }));
+  }
+  if(!rows.length){const e=document.createElement('div');e.className='empty';e.textContent='All trips hidden by your filters.';out.appendChild(e);return;}
+
+  rows.forEach((t,idx)=>{
     const a=analyze(t); if(a.error)return;
     const isMine=(t.seat===CFG.seat);
     // verdict
@@ -401,7 +510,7 @@ function render(parsed){
     const card=document.createElement('div');
     card.className='card'+(isMine?'':' dim');
     card.style.animationDelay=(idx*70)+'ms';
-    const routeStr=t.segs.map(s=>s.dep).concat(t.segs[t.segs.length-1].arr).join('–');
+    const routeStr=(t.segs.length===1&&t.segs[0].dep===t.segs[0].arr)?`report at ${t.segs[0].dep}`:t.segs.map(s=>s.dep).concat(t.segs[t.segs.length-1].arr).join('–');
 
     card.innerHTML=`
       <div class="ctop">
@@ -424,9 +533,9 @@ function render(parsed){
       <div class="cbody">
         <div class="basis">${a.basis}</div>
         <div class="win">
-          <div><div class="k">Earliest land</div><div class="t">${fzShort(a.earliestMs)}<br><small>${dateStr(a.earliestMs)}</small></div></div>
-          <div class="rep"><div class="k">Report (anchor)</div><div class="t">${fzShort(a.anchorMs)}<br><small>${dateStr(a.anchorMs)}</small></div></div>
-          <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.latestMs)}<br><small>${dateStr(a.latestMs)}</small></div></div>
+          <div><div class="k">Earliest land</div><div class="t">${fzShort(a.earliestMs)}<br><small>${flocal(a.earliestMs)}</small></div></div>
+          <div class="rep"><div class="k">Report (anchor)</div><div class="t">${fzShort(a.anchorMs)}<br><small>${flocal(a.anchorMs)}</small></div></div>
+          <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.latestMs)}<br><small>${flocal(a.latestMs)}</small><br><small class="countdown" data-until="${a.latestMs}" data-label="land"></small></div></div>
         </div>
 
         <div class="sech">Commute to ${a.dest} — flights must land by ${fzShort(a.latestMs)}</div>
@@ -452,56 +561,127 @@ function render(parsed){
         </div>
         <div class="costline js-costline"></div>
 
-        <div class="eval" data-idx="${idx}">
-          <div class="sech" style="margin-bottom:9px">Check a flight you found → pay vs ticket</div>
-          <div class="row3">
-            <div class="field" style="gap:4px">
-              <label>Flight arrival (Zulu)</label>
-              <div style="display:flex;gap:6px">
-                <select class="ev-date" style="flex:1.3"></select>
-                <input class="ev-time" inputmode="numeric" placeholder="HHMM" maxlength="4" style="flex:1;text-align:center">
-              </div>
-            </div>
-            <div class="field" style="gap:4px">
-              <label>Ticket $ (you pay)</label>
-              <input class="ev-price" inputmode="decimal" placeholder="0">
-            </div>
+        <div class="flights" data-idx="${idx}">
+          <div class="fhdr"><div class="sech" style="margin:0">Flight options${CFG.workerUrl?'':' — log what you find on Google Flights'}</div>${CFG.workerUrl?`<button type="button" class="btn solid f-auto">🔎 Auto-search</button>`:''}</div>
+          <div class="f-status" style="display:none"></div>
+          <div class="fadd">
+            <input class="f-car" placeholder="DL" maxlength="3" style="text-transform:uppercase">
+            <input class="f-num" placeholder="1234" maxlength="5">
+            <select class="f-gw"></select>
+            <input class="f-dep" inputmode="numeric" placeholder="dep z" maxlength="4">
+            <input class="f-arr" inputmode="numeric" placeholder="arr z" maxlength="4">
+            <select class="f-date"></select>
+            <input class="f-price" inputmode="decimal" placeholder="$">
+            <button type="button" class="btn solid f-add">add</button>
           </div>
-          <div class="verdict-eval" style="display:none"></div>
+          <div class="flist"></div>
         </div>
+        <div style="display:flex;justify-content:flex-end"><button type="button" class="chip js-copy">⧉ copy summary</button></div>
       </div>`;
     out.appendChild(card);
 
-    // wire up evaluator
-    const ev=card.querySelector('.eval');
-    const dsel=ev.querySelector('.ev-date');
-    // date options: earliest date .. report date
-    const opts=[]; let cur=new Date(a.earliestMs); cur.setUTCHours(0,0,0,0);
-    const end=new Date(a.anchorMs); end.setUTCHours(0,0,0,0);
-    while(cur<=end){opts.push(dateStr(cur.getTime()));cur.setUTCDate(cur.getUTCDate()+1);}
-    dsel.innerHTML=opts.map(o=>`<option value="${o}"${o===dateStr(a.latestMs)?' selected':''}>${o}</option>`).join('');
-    const recompute=()=>{
-      const tv=ev.querySelector('.ev-time').value.trim();
-      const pv=parseFloat(ev.querySelector('.ev-price').value);
-      const box=ev.querySelector('.verdict-eval');
-      if(!/^\d{3,4}$/.test(tv)){box.style.display='none';return;}
-      const hhmm=tv.padStart(4,'0');
-      const dparts=dsel.value.split('-');
-      const arrMs=Date.UTC(+dparts[0],+dparts[1]-1,+dparts[2],+hhmm.slice(0,2),+hhmm.slice(2,4));
-      const beforeRep=(a.anchorMs-arrMs)/6e4; // minutes before report
-      let ec,etitle,enote;
-      if(arrMs<=a.latestMs){ec='go';etitle='COMPLIANT ✓';enote=`Lands ${dur(beforeRep)} before report (≥3h). Meets the MOU.`;}
-      else if(arrMs<a.anchorMs){ec='cau';etitle='UNDER 3-HR — judgment call';enote=`Lands only ${dur(beforeRep)} before report. Breaks the 3-hr buffer but physically makes it. Each failed commute is judged individually.`;}
-      else {ec='nogo';etitle='TOO LATE ✕';enote=`Arrives at/after report (${dur(-beforeRep)} late). Cannot make it.`;}
-      let net='';
-      if(!isNaN(pv)){const n=gross-pv;net=`<div style="margin-top:7px">Trip ${money(gross)} − ticket ${money(pv)} = <span class="net">${money(n)} net</span></div>`;}
-      box.style.display='block';
-      box.style.borderColor= ec==='go'?'#1f3a2a':ec==='cau'?'#3c3420':'#3a2020';
-      box.innerHTML=`<div class="big ${ec}">${etitle}</div><div style="color:var(--muted);margin-top:3px">${enote}</div>${net}`;
-    };
-    ev.querySelectorAll('.ev-time,.ev-price,.ev-date').forEach(el=>el.addEventListener('input',recompute));
+    // flight options panel
+    const fl=card.querySelector('.flights');
+    const q=s=>fl.querySelector(s);
+    q('.f-gw').innerHTML=CFG.gateways.filter(g=>g.code).map(g=>`<option>${g.code}</option>`).join('')+`<option value="?">other</option>`;
+    const dSel=q('.f-date');
+    const dopts=[]; let cur=new Date(a.earliestMs);cur.setUTCHours(0,0,0,0);const end=new Date(a.latestMs);end.setUTCHours(0,0,0,0);
+    while(cur<=end){dopts.push(dateStr(cur.getTime()));cur.setUTCDate(cur.getUTCDate()+1);}
+    if(!dopts.length)dopts.push(dateStr(a.latestMs));
+    dSel.innerHTML=dopts.map(o=>`<option value="${o}"${o===dateStr(a.latestMs)?' selected':''}>${o.slice(5)}</option>`).join('');
 
-    // OT bonus: render cost line + react to start-day dropdown
+    const flights=[];
+    const mk=(hhmm,d)=>{const dp=d.split('-');return Date.UTC(+dp[0],+dp[1]-1,+dp[2],+hhmm.slice(0,2),+hhmm.slice(2,4));};
+    function classify(arrMs){
+      if(arrMs<a.earliestMs)return['cau','TOO EARLY','arrives before the 24h window'];
+      if(arrMs<=a.latestMs)return['go','COMPLIES','lands '+dur((a.anchorMs-arrMs)/6e4)+' before report'];
+      if(arrMs<a.anchorMs)return['cau','UNDER 3-HR','only '+dur((a.anchorMs-arrMs)/6e4)+' before report — judgment call'];
+      return['nogo','TOO LATE','arrives at/after report'];
+    }
+    function renderFlights(){
+      const list=q('.flist');
+      if(!flights.length){list.innerHTML='';return;}
+      const inWin=f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs;
+      const rank=f=>{ if(inWin(f)&&f.stops===0)return 0; if(inWin(f))return 1;
+                      if(f.arrMs>a.latestMs&&f.arrMs<a.anchorMs)return 2; if(f.arrMs<a.earliestMs)return 3; return 4; };
+      const sorted=[...flights].sort((x,y)=>{const rx=rank(x),ry=rank(y); if(rx!==ry)return rx-ry; return rx<=1?(y.arrMs-x.arrMs):(x.arrMs-y.arrMs);});
+      // best compliant NONSTOP = the one that fits with the most rest (latest arrival)
+      const nsFit=sorted.filter(f=>inWin(f)&&f.stops===0).sort((x,y)=>y.arrMs-x.arrMs);
+      const bestNs=nsFit[0];
+      // fallbacks if no nonstop fits: latest 1-2 compliant of any kind
+      const compliant=[...flights].filter(inWin).sort((x,y)=>x.arrMs-y.arrMs);
+      const backups=compliant.slice(-2).map(f=>f.id);
+
+      const banner = bestNs ? `<div class="fbanner">
+          <div class="fbk">✈ NONSTOP fits your window</div>
+          <div class="fbv"><img class="flogo" src="https://images.kiwi.com/airlines/64/${bestNs.carrier}.png" alt="" onerror="this.style.display='none'">
+            <b>${bestNs.carrier}${bestNs.num}</b> · ${bestNs.gw}→${a.dest} · arr <b>${zt(bestNs.arrMs)}</b> ${flocal(bestNs.arrMs)}${bestNs.price!=null?` · ${money(bestNs.price)}`:''}</div>
+          <div class="fbn">lands ${dur((a.anchorMs-bestNs.arrMs)/6e4)} before report · most rest of the nonstops that comply</div>
+        </div>` : '';
+
+      list.innerHTML = banner + sorted.map(f=>{
+        const [ec,lab,note]=classify(f.arrMs);
+        const stopPill = f.stops===0 ? '<span class="fpill nonstop">NONSTOP</span>'
+                        : (f.stops>0 ? `<span class="fpill stop">${f.stops} STOP${f.stops>1?'S':''}</span>` : '');
+        const star = (bestNs && f.id===bestNs.id) ? '★ best · nonstop'
+                    : (!bestNs && backups.includes(f.id) ? (f.id===backups[backups.length-1]?'★ best · most rest':'✓ backup') : '');
+        const net=(f.price!=null)?` · ticket ${money(f.price)} · <span class="net">net ${money(gross-f.price)}</span>`:'';
+        const logo=`<img class="flogo" src="https://images.kiwi.com/airlines/64/${f.carrier}.png" alt="" onerror="this.style.display='none'">`;
+        return `<div class="fstrip ${ec}${(bestNs&&f.id===bestNs.id)?' pin':''}">
+          <div class="fhd">${logo}<b>${f.carrier}${f.num}</b><span class="fpill ${ec}">${lab}</span>${stopPill}${star?`<span class="fbest">${star}</span>`:''}<button class="frm" data-id="${f.id}">✕</button></div>
+          <div class="frt">${f.gw} → ${a.dest} · ${dur((f.arrMs-f.depMs)/6e4)}</div>
+          <div class="ftimes"><span>dep <b>${zt(f.depMs)}</b> ${flocal(f.depMs)}</span><span>arr <b>${zt(f.arrMs)}</b> ${flocal(f.arrMs)}</span></div>
+          <div class="fnote">${note}${net}</div>
+        </div>`;
+      }).join('');
+      list.querySelectorAll('.frm').forEach(b=>b.addEventListener('click',()=>{const i=flights.findIndex(x=>x.id==b.dataset.id);if(i>=0)flights.splice(i,1);renderFlights();}));
+    }
+    q('.f-add').addEventListener('click',()=>{
+      const car=q('.f-car').value.toUpperCase().trim(), num=q('.f-num').value.trim();
+      const dep=q('.f-dep').value.trim(), arr=q('.f-arr').value.trim(), date=dSel.value;
+      const price=parseFloat(q('.f-price').value);
+      if(!/^[A-Z0-9]{2,3}$/.test(car)||!/^\d{3,4}$/.test(arr)){q('.f-car').focus();return;}
+      let arrMs=mk(arr.padStart(4,'0'),date);
+      let depMs=/^\d{3,4}$/.test(dep)?mk(dep.padStart(4,'0'),date):arrMs;
+      if(depMs>arrMs)depMs-=864e5;
+      flights.push({id:Date.now()+''+Math.round(Math.random()*1e4),carrier:car,num,gw:q('.f-gw').value,depMs,arrMs,price:isNaN(price)?null:price});
+      ['.f-car','.f-num','.f-dep','.f-arr','.f-price'].forEach(s=>q(s).value='');
+      renderFlights();
+    });
+
+    // auto-search via the user's Cloudflare Worker
+    const fstat=q('.f-status');
+    const setFstat=(msg,kind)=>{if(!msg){fstat.style.display='none';return;}fstat.style.display='block';fstat.className='f-status '+(kind||'');fstat.textContent=msg;};
+    const autoBtn=q('.f-auto');
+    if(autoBtn) autoBtn.addEventListener('click',async()=>{
+      if(!CFG.workerUrl){setFstat('Set your Worker URL in Settings to auto-search.','err');return;}
+      autoBtn.disabled=true; const lbl=autoBtn.textContent; autoBtn.textContent='Searching…'; setFstat('Searching your gateways…');
+      const dates=[...new Set([dateStr(a.latestMs-864e5),dateStr(a.latestMs)])];
+      const gws=CFG.gateways.filter(g=>g.code).map(g=>g.code);
+      let got=[],errs=0,skipped=0;
+      for(const gw of gws){for(const date of dates){
+        let res,j;
+        try{res=await fetch(`${CFG.workerUrl}?origin=${encodeURIComponent(gw)}&dest=${encodeURIComponent(a.dest)}&date=${date}`);}catch(e){errs++;continue;}
+        try{j=await res.json();}catch(e){errs++;continue;}
+        if(!j||!Array.isArray(j.flights)){errs++;continue;}
+        for(const f of j.flights){
+          if(!f.tzKnown||!f.arr){skipped++;continue;}
+          got.push({id:'a'+gw+f.carrier+f.num+f.dep,carrier:f.carrier,num:f.num,gw,depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),auto:true});
+        }
+      }}
+      const manual=flights.filter(f=>!f.auto);
+      const keys=new Set(manual.map(f=>f.carrier+f.num+f.depMs));
+      flights.length=0; manual.forEach(f=>flights.push(f));
+      for(const f of got){const k=f.carrier+f.num+f.depMs; if(!keys.has(k)){keys.add(k);flights.push(f);}}
+      renderFlights();
+      const comply=flights.filter(f=>f.auto&&f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs).length;
+      let msg=`Found ${got.length} nonstop${got.length===1?'':'s'} · ${comply} comply`;
+      if(skipped)msg+=` · ${skipped} skipped (airport tz unknown)`;
+      if(errs)msg+=` · ${errs} query error${errs===1?'':'s'}`;
+      if(!got.length&&!errs)msg='No nonstops returned for those gateways/dates — try manual, or confirm the route runs that day.';
+      setFstat(msg, got.length?'ok':'err');
+      autoBtn.disabled=false; autoBtn.textContent=lbl;
+    });
     const startSel=card.querySelector('.js-startday');
     const renderCost=()=>{
       startDay=+startSel.value;
@@ -516,17 +696,29 @@ function render(parsed){
         + ` → <span class="net">${money(C.gross)} gross</span>`
         + `<div class="drivers">credit ${(+t.credit||0).toFixed(2)} · block ${(+t.blockH||0).toFixed(2)} · CRT ${(+t.crt||0).toFixed(2)} &nbsp;(highest wins)</div>`;
       card.querySelector('.js-pay').textContent = money(gross);
-      recompute();
+      renderFlights();
     };
     startSel.value=String(startDay);
     startSel.addEventListener('change',renderCost);
     renderCost();
     countUp(card.querySelector('.js-pay'), gross, 800);
+
+    const copyBtn=card.querySelector('.js-copy');
+    copyBtn.addEventListener('click',()=>{
+      const txt=`${t.pid} ${t.base||a.dest} ${t.equip} ${t.seat}\n`+
+        `Report ${fz(a.anchorMs)} | land by ${fz(a.latestMs)} | commute to ${a.dest}\n`+
+        `Pays ${money(gross)} (${C.driver} ${(+C.hrs).toFixed(2)}h${C.bonusHrs?' +'+C.bonusHrs+'h OT bonus':''})`;
+      const done=()=>{const o=copyBtn.textContent;copyBtn.textContent='✓ copied';setTimeout(()=>copyBtn.textContent=o,1400);};
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
+      else fallbackCopy(txt,done);
+    });
   });
 }
+function fallbackCopy(txt,done){try{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done&&done();}catch(e){}}
 
 /* ============ inputs / wiring ============ */
 let LAST_RAWS=null;
+let LAST_MANUAL=null;
 let OCR_USED=false;
 (function(){  // swallow only the harmless "fake worker" notice; let every other warning through
   const ow=console.warn;
@@ -601,7 +793,7 @@ async function fileToText(file){
   return file.text();
 }
 function runRaws(raws){
-  LAST_RAWS=raws;
+  LAST_RAWS=raws; LAST_MANUAL=null;
   try{
     const all={closeMs:null,trips:[]};
     raws.forEach(r=>{const pp=parseEmail(r); if(all.closeMs==null)all.closeMs=pp.closeMs; all.trips.push(...pp.trips);});
@@ -609,7 +801,7 @@ function runRaws(raws){
     if(!OCR_USED) setStatus(null);
   }catch(e){document.getElementById('out').innerHTML=`<div class="empty">Couldn't parse that. ${e.message}</div>`;}
 }
-const reRender=()=>{if(LAST_RAWS)runRaws(LAST_RAWS);};
+const reRender=()=>{saveCfg(); if(LAST_RAWS)runRaws(LAST_RAWS); else if(LAST_MANUAL)render({closeMs:null,trips:[LAST_MANUAL]});};
 
 document.getElementById('file').addEventListener('change',e=>{
   const files=[...e.target.files]; if(!files.length)return;
@@ -621,9 +813,28 @@ const drop=document.getElementById('drop');
 drop.addEventListener('drop',e=>{const fs=[...e.dataTransfer.files];if(fs.length)Promise.all(fs.map(fileToText)).then(runRaws).catch(err=>document.getElementById('out').innerHTML=`<div class="empty">${err.message}</div>`);});
 
 document.getElementById('pasteBtn').onclick=()=>{const w=document.getElementById('pasteWrap');w.style.display=w.style.display==='none'?'block':'none';};
-document.getElementById('runPaste').onclick=()=>{OCR_USED=false;setStatus(null);runRaws([document.getElementById('paste').value]);};
-document.getElementById('sampleBtn').onclick=()=>{OCR_USED=false;setStatus(null);runRaws(Object.values(SAMPLES));};
-document.getElementById('clearBtn').onclick=()=>{document.getElementById('out').innerHTML='';document.getElementById('paste').value='';LAST_RAWS=null;};
+document.getElementById('manualBtn').onclick=()=>{const w=document.getElementById('manualWrap');w.style.display=w.style.display==='none'?'block':'none';};
+document.getElementById('runManual').onclick=()=>{
+  const v=id=>document.getElementById(id).value.trim();
+  const err=document.getElementById('m-err');
+  const base=v('m-base').toUpperCase(), dt=v('m-date'), tm=v('m-time');
+  if(!/^[A-Z]{3,4}$/.test(base)||!dt||!/^\d{3,4}$/.test(tm)){
+    err.style.display='block';err.textContent='Need a base (3–4 letters), a report date, and a Zulu time like 2030.';return;}
+  err.style.display='none';
+  const hhmm=tm.padStart(4,'0'), parts=dt.split('-').map(Number);
+  const anchorMs=Date.UTC(parts[0],parts[1]-1,parts[2],+hhmm.slice(0,2),+hhmm.slice(2,4));
+  const num=id=>{const n=parseFloat(v(id));return isNaN(n)?undefined:n;};
+  const tafb=num('m-tafb');
+  LAST_MANUAL={pid:'MANUAL',base,equip:CFG.fleet,seat:CFG.seat,
+    segs:[{flight:'—',dep:base,arr:base,dh:false,stdMs:anchorMs+offsetMin()*6e4}],
+    statedReportMs:anchorMs, credit:num('m-credit'), blockH:num('m-block'), crt:num('m-crt'), tafb,
+    days: tafb?Math.max(1,Math.ceil(tafb/24)):1};
+  OCR_USED=false; LAST_RAWS=null;
+  render({closeMs:null,trips:[LAST_MANUAL]});
+};
+document.getElementById('runPaste').onclick=()=>{OCR_USED=false;LAST_MANUAL=null;setStatus(null);runRaws([document.getElementById('paste').value]);};
+document.getElementById('sampleBtn').onclick=()=>{OCR_USED=false;LAST_MANUAL=null;setStatus(null);runRaws(Object.values(SAMPLES));};
+document.getElementById('clearBtn').onclick=()=>{document.getElementById('out').innerHTML='';document.getElementById('paste').value='';LAST_RAWS=null;LAST_MANUAL=null;};
 
 /* config UI */
 const $=id=>document.getElementById(id);
@@ -647,7 +858,17 @@ fillYos();
 yos.onchange=()=>{CFG.yos=+yos.value; reRender();};
 
 const pdInput=$('perdiem');
+pdInput.value=CFG.perDiem;
 pdInput.addEventListener('input',()=>{CFG.perDiem=+pdInput.value||0; reRender();});
+
+const TZS=[['America/New_York','Eastern'],['America/Chicago','Central'],['America/Denver','Mountain'],['America/Phoenix','Arizona'],['America/Los_Angeles','Pacific'],['America/Anchorage','Alaska'],['Pacific/Honolulu','Hawaii'],['UTC','UTC (Zulu)']];
+const tzSel=$('tz');
+tzSel.innerHTML=TZS.map(([v,l])=>`<option value="${v}"${v===CFG.tz?' selected':''}>${l}</option>`).join('');
+tzSel.onchange=()=>{CFG.tz=tzSel.value; saveCfg(); tick(); reRender();};
+
+const workerInput=$('worker');
+workerInput.value=CFG.workerUrl||'';
+workerInput.addEventListener('input',()=>{CFG.workerUrl=workerInput.value.trim().replace(/\/+$/,''); saveCfg(); reRender();});
 
 const gwCfg=$('gwCfg');
 function renderGwCfg(){
@@ -672,7 +893,17 @@ $('addGw').addEventListener('click',()=>{CFG.gateways.push({code:'',drive:60}); 
 updateProfile();
 
 /* live zulu clock */
-function tick(){const d=new Date();$('zclock').innerHTML=`<small>Z</small> ${DOW[d.getUTCDay()]} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`;}
+function fmtLeft(ms){const m=Math.floor(ms/60000),d=Math.floor(m/1440),h=Math.floor((m%1440)/60),mm=m%60;return d>0?`${d}d ${h}h`:h>0?`${h}h ${mm}m`:`${mm}m`;}
+function tick(){
+  const d=new Date();
+  $('zclock').innerHTML=`<span><small>Z</small> ${DOW[d.getUTCDay()]} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}</span><span class="zlocal">${flocal(d.getTime())}</span>`;
+  const nowMs=Date.now();
+  document.querySelectorAll('.countdown').forEach(el=>{
+    const until=+el.dataset.until, lab=el.dataset.label, left=until-nowMs;
+    if(left<=0){el.textContent=lab==='close'?'bidding closed':'deadline passed';el.classList.add('cd-past');}
+    else{el.textContent=(lab==='close'?'closes in ':'land in ')+fmtLeft(left);el.classList.remove('cd-past');}
+  });
+}
 tick(); setInterval(tick,1000);
 </script>
 </body>
