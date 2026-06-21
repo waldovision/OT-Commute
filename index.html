@@ -141,6 +141,12 @@
   .ftimes{display:flex;flex-wrap:wrap;gap:4px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
   .ftimes b{color:#bff7da}
   .fnote{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .fconn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:7px;padding:7px 9px;border-left:2px solid var(--gold);background:rgba(222,180,71,.06);border-radius:4px;display:flex;flex-direction:column;gap:3px}
+  .fconn .flay{color:var(--tyellow)}
+  .fconn .fcav{color:#c98a2b;font-style:italic;margin-top:2px}
+  .fconn.tight{border-left-color:#e0683a;background:rgba(224,104,58,.08)}
+  .fconn .flay.warn{color:#e0683a;font-weight:600}
+  .fpill.warn{background:rgba(224,104,58,.16);color:#e0683a;border:1px solid rgba(224,104,58,.4)}
   .status{font-family:var(--mono);font-size:11.5px;margin-top:9px;padding:10px 12px;border-radius:9px;line-height:1.5;
     border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09);color:#bcd8ff}
   .status.work{border-color:rgba(255,206,74,.45);background:rgba(255,206,74,.09);color:var(--cau)}
@@ -271,6 +277,23 @@
         <label>Auto-search backend — your Cloudflare Worker URL (optional)</label>
         <input id="worker" type="url" placeholder="https://ot-flights.you.workers.dev" autocomplete="off" spellcheck="false">
         <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px">Leave blank to log flights by hand. With a URL set, each trip gets a 🔎 Auto-search button.</div>
+        <div style="margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <label style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">Max stops to search</label>
+          <select id="maxStops" style="width:auto;min-width:150px">
+            <option value="0">Nonstop only</option>
+            <option value="1">Up to 1 stop</option>
+            <option value="2">Up to 2 stops</option>
+            <option value="3">Up to 3 stops</option>
+          </select>
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:#c98a2b;margin-top:5px;line-height:1.5">More stops = more API calls and more misconnect risk. Connections are self-connect (separate tickets); the nonstop stays the highlighted pick.</div>
+        <div style="margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <label style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">Connection time (min)</label>
+          <input id="minConn" type="number" min="20" max="240" step="5" style="width:78px" title="shortest connection allowed">
+          <span style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">to</span>
+          <input id="maxConn" type="number" min="60" max="720" step="15" style="width:78px" title="longest connection shown">
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">Self-connect floor — 60 min is a safe carry-on minimum for a pilot (KCM). Anything under 60 is flagged ⚠ TIGHT. International hubs (customs) realistically need 2–3h.</div>
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
@@ -314,7 +337,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 15 · 2026-06-20 · nonstop-fits banner + passenger-only (cargo filtered)</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 19 · 2026-06-20 · connections: configurable connect time (self-connect floor) + ⚠ tight flag</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -342,9 +365,10 @@ const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,De
 const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
-const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:'',
+const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:'', maxStops:1, minConn:60, maxConn:360,
   gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}],
   sortByPay:false, mySeatOnly:false, hidePast:false };
+const US_HUBS=new Set(['ATL','DFW','DEN','ORD','CLT','IAH','PHX','LAS','MSP','DTW','SLC','SEA','EWR','JFK','LGA','BOS','MIA','LAX','SFO','PHL','IAD','DCA','MDW','TPA','AUS','DAL','HOU','BNA','RDU','STL','MCI','CLE','CVG','PIT','IND','CMH','SAT','SJC','OAK','PDX','SMF','RSW','SDF','MEM','ABQ','ONT','BUR','HNL','BWI','SAN','FLL','MCO']);
 const LS_KEY='otcc_cfg_v1';
 function saveCfg(){try{localStorage.setItem(LS_KEY,JSON.stringify(CFG));}catch(e){}}
 function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){}}
@@ -602,9 +626,12 @@ function render(parsed){
       const list=q('.flist');
       if(!flights.length){list.innerHTML='';return;}
       const inWin=f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs;
-      const rank=f=>{ if(inWin(f)&&f.stops===0)return 0; if(inWin(f))return 1;
-                      if(f.arrMs>a.latestMs&&f.arrMs<a.anchorMs)return 2; if(f.arrMs<a.earliestMs)return 3; return 4; };
-      const sorted=[...flights].sort((x,y)=>{const rx=rank(x),ry=rank(y); if(rx!==ry)return rx-ry; return rx<=1?(y.arrMs-x.arrMs):(x.arrMs-y.arrMs);});
+      const tier=f=>{ if(inWin(f))return 0; if(f.arrMs>a.latestMs&&f.arrMs<a.anchorMs)return 1; if(f.arrMs<a.earliestMs)return 2; return 3; };
+      const sorted=[...flights].sort((x,y)=>{
+        const tx=tier(x),ty=tier(y); if(tx!==ty)return tx-ty;
+        if(tx===0){ const sx=x.stops||0, sy=y.stops||0; if(sx!==sy)return sx-sy; return y.arrMs-x.arrMs; }
+        return x.arrMs-y.arrMs;
+      });
       // best compliant NONSTOP = the one that fits with the most rest (latest arrival)
       const nsFit=sorted.filter(f=>inWin(f)&&f.stops===0).sort((x,y)=>y.arrMs-x.arrMs);
       const bestNs=nsFit[0];
@@ -627,10 +654,30 @@ function render(parsed){
                     : (!bestNs && backups.includes(f.id) ? (f.id===backups[backups.length-1]?'★ best · most rest':'✓ backup') : '');
         const net=(f.price!=null)?` · ticket ${money(f.price)} · <span class="net">net ${money(gross-f.price)}</span>`:'';
         const logo=`<img class="flogo" src="https://images.kiwi.com/airlines/64/${f.carrier}.png" alt="" onerror="this.style.display='none'">`;
+        let routeLine=`${f.gw} → ${a.dest} · ${dur((f.arrMs-f.depMs)/6e4)}`;
+        let connLine='', tightPill='';
+        if(f.stops>=1&&Array.isArray(f.legs)&&f.legs.length>=2){
+          const hubs=f.legs.slice(0,-1).map(L=>L.to);
+          routeLine=`${f.gw} → ${hubs.join(' → ')} → ${a.dest} · ${dur((f.arrMs-f.depMs)/6e4)} total`;
+          let parts=[], tightest=Infinity;
+          for(let i=0;i<f.legs.length;i++){
+            const L=f.legs[i];
+            parts.push(`<span>${L.carrier}${L.num} ${L.from}→${L.to} · arr ${zt(Date.parse(L.arr))}</span>`);
+            if(i<f.legs.length-1){ const lay=Date.parse(f.legs[i+1].dep)-Date.parse(L.arr); tightest=Math.min(tightest,lay); parts.push(`<span class="flay${lay<60*6e4?' warn':''}">⟳ ${dur(lay/6e4)} in ${L.to}</span>`); }
+          }
+          const intl=hubs.some(h=>!US_HUBS.has(h));
+          const tight=tightest<60*6e4;
+          if(tight) tightPill='<span class="fpill warn">⚠ TIGHT</span>';
+          let cav = tight ? `⚠ tight ${dur(tightest/6e4)} connection — risky if a leg runs late. ` : '';
+          cav += 'self-connect: separate tickets, no protection on a misconnect';
+          if(intl) cav += ' · intl hub — allow 2–3h for customs';
+          connLine=`<div class="fconn${tight?' tight':''}">${parts.join('')}<span class="fcav">${cav}</span></div>`;
+        }
         return `<div class="fstrip ${ec}${(bestNs&&f.id===bestNs.id)?' pin':''}">
-          <div class="fhd">${logo}<b>${f.carrier}${f.num}</b><span class="fpill ${ec}">${lab}</span>${stopPill}${star?`<span class="fbest">${star}</span>`:''}<button class="frm" data-id="${f.id}">✕</button></div>
-          <div class="frt">${f.gw} → ${a.dest} · ${dur((f.arrMs-f.depMs)/6e4)}</div>
+          <div class="fhd">${logo}<b>${f.carrier}${f.num}</b><span class="fpill ${ec}">${lab}</span>${stopPill}${tightPill}${star?`<span class="fbest">${star}</span>`:''}<button class="frm" data-id="${f.id}">✕</button></div>
+          <div class="frt">${routeLine}</div>
           <div class="ftimes"><span>dep <b>${zt(f.depMs)}</b> ${flocal(f.depMs)}</span><span>arr <b>${zt(f.arrMs)}</b> ${flocal(f.arrMs)}</span></div>
+          ${connLine}
           <div class="fnote">${note}${net}</div>
         </div>`;
       }).join('');
@@ -655,31 +702,31 @@ function render(parsed){
     const autoBtn=q('.f-auto');
     if(autoBtn) autoBtn.addEventListener('click',async()=>{
       if(!CFG.workerUrl){setFstat('Set your Worker URL in Settings to auto-search.','err');return;}
-      autoBtn.disabled=true; const lbl=autoBtn.textContent; autoBtn.textContent='Searching…'; setFstat('Searching your gateways…');
-      const dates=[...new Set([dateStr(a.latestMs-864e5),dateStr(a.latestMs)])];
+      autoBtn.disabled=true; const lbl=autoBtn.textContent; autoBtn.textContent='Searching…'; setFstat('Searching nonstops + connections…');
       const gws=CFG.gateways.filter(g=>g.code).map(g=>g.code);
       let got=[],errs=0,skipped=0;
-      for(const gw of gws){for(const date of dates){
-        let res,j;
-        try{res=await fetch(`${CFG.workerUrl}?origin=${encodeURIComponent(gw)}&dest=${encodeURIComponent(a.dest)}&date=${date}`);}catch(e){errs++;continue;}
-        try{j=await res.json();}catch(e){errs++;continue;}
-        if(!j||!Array.isArray(j.flights)){errs++;continue;}
-        for(const f of j.flights){
-          if(!f.tzKnown||!f.arr){skipped++;continue;}
-          got.push({id:'a'+gw+f.carrier+f.num+f.dep,carrier:f.carrier,num:f.num,gw,depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),auto:true});
-        }
-      }}
+      try{
+        const res=await fetch(`${CFG.workerUrl}?origins=${encodeURIComponent(gws.join(','))}&dest=${encodeURIComponent(a.dest)}&arriveBy=${a.latestMs}&maxStops=${CFG.maxStops}&minConn=${CFG.minConn}&maxConn=${CFG.maxConn}`);
+        const j=await res.json();
+        if(j&&Array.isArray(j.flights)){
+          for(const f of j.flights){
+            if(!f.tzKnown||!f.arr){skipped++;continue;}
+            got.push({id:'a'+(f.gw||'')+f.carrier+f.num+f.dep+(f.via||''),carrier:f.carrier,num:f.num,gw:f.gw||'',depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),via:f.via||null,legs:Array.isArray(f.legs)?f.legs:null,auto:true});
+          }
+        } else { errs++; if(j&&j.error)setFstat('Worker: '+j.error,'err'); }
+      }catch(e){ errs++; }
       const manual=flights.filter(f=>!f.auto);
-      const keys=new Set(manual.map(f=>f.carrier+f.num+f.depMs));
+      const keys=new Set(manual.map(f=>f.carrier+f.num+f.depMs+(f.via||'')));
       flights.length=0; manual.forEach(f=>flights.push(f));
-      for(const f of got){const k=f.carrier+f.num+f.depMs; if(!keys.has(k)){keys.add(k);flights.push(f);}}
+      for(const f of got){const k=f.carrier+f.num+f.depMs+(f.via||''); if(!keys.has(k)){keys.add(k);flights.push(f);}}
       renderFlights();
-      const comply=flights.filter(f=>f.auto&&f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs).length;
-      let msg=`Found ${got.length} nonstop${got.length===1?'':'s'} · ${comply} comply`;
+      const auto=flights.filter(f=>f.auto), ns=auto.filter(f=>f.stops===0).length, cx=auto.filter(f=>f.stops>=1).length;
+      const comply=auto.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs).length;
+      let msg=`Found ${ns} nonstop${ns===1?'':'s'}${cx?` + ${cx} connection${cx===1?'':'s'}`:''} · ${comply} comply`;
       if(skipped)msg+=` · ${skipped} skipped (airport tz unknown)`;
-      if(errs)msg+=` · ${errs} query error${errs===1?'':'s'}`;
-      if(!got.length&&!errs)msg='No nonstops returned for those gateways/dates — try manual, or confirm the route runs that day.';
-      setFstat(msg, got.length?'ok':'err');
+      if(errs)msg+=` · search error — check Worker URL/key`;
+      if(!auto.length&&!errs)msg='Nothing returned for those gateways — try manual, or confirm a route runs that day.';
+      setFstat(msg, auto.length?'ok':'err');
       autoBtn.disabled=false; autoBtn.textContent=lbl;
     });
     const startSel=card.querySelector('.js-startday');
@@ -869,6 +916,11 @@ tzSel.onchange=()=>{CFG.tz=tzSel.value; saveCfg(); tick(); reRender();};
 const workerInput=$('worker');
 workerInput.value=CFG.workerUrl||'';
 workerInput.addEventListener('input',()=>{CFG.workerUrl=workerInput.value.trim().replace(/\/+$/,''); saveCfg(); reRender();});
+const maxStopsSel=document.getElementById('maxStops');
+if(maxStopsSel){ maxStopsSel.value=String(CFG.maxStops); maxStopsSel.addEventListener('change',()=>{CFG.maxStops=+maxStopsSel.value; saveCfg(); reRender();}); }
+const minConnIn=document.getElementById('minConn'), maxConnIn=document.getElementById('maxConn');
+if(minConnIn){ minConnIn.value=CFG.minConn; minConnIn.addEventListener('change',()=>{CFG.minConn=Math.max(20,Math.min(240,+minConnIn.value||60)); minConnIn.value=CFG.minConn; saveCfg(); reRender();}); }
+if(maxConnIn){ maxConnIn.value=CFG.maxConn; maxConnIn.addEventListener('change',()=>{CFG.maxConn=Math.max(CFG.minConn+30,Math.min(720,+maxConnIn.value||360)); maxConnIn.value=CFG.maxConn; saveCfg(); reRender();}); }
 
 const gwCfg=$('gwCfg');
 function renderGwCfg(){
