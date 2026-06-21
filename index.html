@@ -337,7 +337,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 19 · 2026-06-20 · connections: configurable connect time (self-connect floor) + ⚠ tight flag</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 19r · 2026-06-21 · diagnostics + free-tier rate-limit throttle BUILD 19d · 2026-06-21 · + diagnostic mode (debug=1, apiErrors) to surface AeroDataBox status 429 retry</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -365,13 +365,14 @@ const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,De
 const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
-const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:'', maxStops:1, minConn:60, maxConn:360,
+const DEFAULT_WORKER='https://ot-flights.ccwaldo.workers.dev';
+const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360,
   gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}],
   sortByPay:false, mySeatOnly:false, hidePast:false };
 const US_HUBS=new Set(['ATL','DFW','DEN','ORD','CLT','IAH','PHX','LAS','MSP','DTW','SLC','SEA','EWR','JFK','LGA','BOS','MIA','LAX','SFO','PHL','IAD','DCA','MDW','TPA','AUS','DAL','HOU','BNA','RDU','STL','MCI','CLE','CVG','PIT','IND','CMH','SAT','SJC','OAK','PDX','SMF','RSW','SDF','MEM','ABQ','ONT','BUR','HNL','BWI','SAN','FLL','MCO']);
 const LS_KEY='otcc_cfg_v1';
 function saveCfg(){try{localStorage.setItem(LS_KEY,JSON.stringify(CFG));}catch(e){}}
-function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){}}
+function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){} if(!CFG.workerUrl)CFG.workerUrl=DEFAULT_WORKER;}
 loadCfg();
 
 function parseZ(s){const m=s.trim().match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
@@ -704,11 +705,12 @@ function render(parsed){
       if(!CFG.workerUrl){setFstat('Set your Worker URL in Settings to auto-search.','err');return;}
       autoBtn.disabled=true; const lbl=autoBtn.textContent; autoBtn.textContent='Searching…'; setFstat('Searching nonstops + connections…');
       const gws=CFG.gateways.filter(g=>g.code).map(g=>g.code);
-      let got=[],errs=0,skipped=0;
+      let got=[],errs=0,skipped=0,depthInfo=null;
       try{
         const res=await fetch(`${CFG.workerUrl}?origins=${encodeURIComponent(gws.join(','))}&dest=${encodeURIComponent(a.dest)}&arriveBy=${a.latestMs}&maxStops=${CFG.maxStops}&minConn=${CFG.minConn}&maxConn=${CFG.maxConn}`);
         const j=await res.json();
         if(j&&Array.isArray(j.flights)){
+          depthInfo={effMax:j.maxStops,reqMax:(j.requestedMaxStops!=null?j.requestedMaxStops:CFG.maxStops),hasNonstop:!!j.hasNonstop};
           for(const f of j.flights){
             if(!f.tzKnown||!f.arr){skipped++;continue;}
             got.push({id:'a'+(f.gw||'')+f.carrier+f.num+f.dep+(f.via||''),carrier:f.carrier,num:f.num,gw:f.gw||'',depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),via:f.via||null,legs:Array.isArray(f.legs)?f.legs:null,auto:true});
@@ -723,6 +725,7 @@ function render(parsed){
       const auto=flights.filter(f=>f.auto), ns=auto.filter(f=>f.stops===0).length, cx=auto.filter(f=>f.stops>=1).length;
       const comply=auto.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs).length;
       let msg=`Found ${ns} nonstop${ns===1?'':'s'}${cx?` + ${cx} connection${cx===1?'':'s'}`:''} · ${comply} comply`;
+      if(depthInfo&&depthInfo.hasNonstop&&depthInfo.reqMax>1&&depthInfo.effMax<depthInfo.reqMax)msg+=` · nonstop found — capped at 1-stop backups`;
       if(skipped)msg+=` · ${skipped} skipped (airport tz unknown)`;
       if(errs)msg+=` · search error — check Worker URL/key`;
       if(!auto.length&&!errs)msg='Nothing returned for those gateways — try manual, or confirm a route runs that day.';
