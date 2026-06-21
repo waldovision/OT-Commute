@@ -170,7 +170,7 @@
   @keyframes pulse{0%,100%{box-shadow:0 0 9px 1px currentColor;transform:scale(1)}50%{box-shadow:0 0 22px 6px currentColor;transform:scale(1.16)}}
   .lamp .v{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.06em;color:currentColor;text-shadow:0 0 16px currentColor;z-index:1}
   .lamp .vs{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-align:center;text-transform:uppercase;z-index:1}
-  .go{color:var(--go)} .cau{color:var(--cau)} .nogo{color:var(--nogo)}
+  .go{color:var(--go)} .cau{color:var(--cau)} .nogo{color:var(--nogo)} .wait{color:#5f6f86}
   .chead{flex:1;padding:12px 14px;min-width:0}
   .chead .pid{font-family:var(--mono);font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff}
   .chead .route{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
@@ -525,8 +525,7 @@ function render(parsed){
     // verdict
     let cls,v,vs;
     if(now>=a.anchorMs){cls='nogo';v='NO-GO';vs='report time passed';}
-    else if(now>=a.latestMs){cls='cau';v='CAUTION';vs='3-hr window closed';}
-    else {cls='go';v='GO';vs='window open';}
+    else {cls='wait';v='—';vs=CFG.workerUrl?'tap Auto-search':'log a flight';}
     const tripDays = t.days || Math.max(1, Math.ceil((t.tafb||24)/24));
     let startDay = 1;
     const computeC = sd => cost(t,rate,CFG.perDiem,bonusHours(sd,tripDays));
@@ -623,7 +622,34 @@ function render(parsed){
       if(arrMs<a.anchorMs)return['cau','UNDER 3-HR','only '+dur((a.anchorMs-arrMs)/6e4)+' before report — judgment call'];
       return['nogo','TOO LATE','arrives at/after report'];
     }
+    const lampEl=card.querySelector('.lamp');
+    const driveMs=gw=>{const g=CFG.gateways.find(x=>x.code===gw);return g?(g.drive||0)*60000:0;};
+    // GREEN = a flight lands inside the CBA/MOU window (company books it)
+    // AMBER = no company-payable flight, but one still gets you there before report (you self-purchase)
+    // RED   = nothing catchable lands before report
+    function lampState(){
+      const tnow=Date.now();
+      if(tnow>=a.anchorMs) return ['nogo','NO-GO','report time passed'];
+      if(!flights.length) return ['wait','—',CFG.workerUrl?'tap Auto-search':'log a flight'];
+      const catchable=flights.filter(f=>(f.depMs - tnow) >= driveMs(f.gw)); // still bookable, drive time accounted
+      const compliant=catchable.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs);
+      if(compliant.length){
+        const ns=compliant.filter(f=>f.stops===0);
+        const pick=(ns.length?ns:compliant).sort((x,y)=>y.arrMs-x.arrMs)[0];
+        return ['go','GO', pick.stops?`company books · ${pick.stops}-stop`:'company books ticket'];
+      }
+      const makeable=catchable.filter(f=>f.arrMs<a.anchorMs); // gets you there, but outside CBA/MOU
+      if(makeable.length) return ['cau','BUY','buy your own ticket'];
+      return ['nogo','NO-GO', catchable.length?'no flight makes report':'flights already departed'];
+    }
+    function updateLamp(){
+      const [c,val,sub]=lampState();
+      lampEl.className='lamp '+c;
+      const vEl=lampEl.querySelector('.v'), vsEl=lampEl.querySelector('.vs');
+      vEl.className='v '+c; vEl.textContent=val; vsEl.textContent=sub;
+    }
     function renderFlights(){
+      updateLamp();
       const list=q('.flist');
       if(!flights.length){list.innerHTML='';return;}
       const inWin=f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs;
