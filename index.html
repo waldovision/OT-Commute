@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OT Commute — Bid Decision Aid</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMGExMDI0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA0OThmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9InVybCgjYikiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjM0IiByPSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjIuMiIgb3BhY2l0eT0iLjU1Ii8+PGVsbGlwc2UgY3g9IjMxIiBjeT0iMzQiIHJ4PSI2LjUiIHJ5PSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjEuNiIgb3BhY2l0eT0iLjUiLz48bGluZSB4MT0iMTYiIHkxPSIzNCIgeDI9IjQ2IiB5Mj0iMzQiIHN0cm9rZT0iIzNhOGVlMCIgc3Ryb2tlLXdpZHRoPSIxLjYiIG9wYWNpdHk9Ii41Ii8+PHBhdGggZD0iTTE0IDQ4IEw1MiAxNCBMNDAgNDcgTDM2IDM3IFoiIGZpbGw9IiNmZmJlMjAiLz48cGF0aCBkPSJNMTQgNDggTDM2IDM3IEwyNCA1MCBaIiBmaWxsPSIjZGViNDQ3Ii8+PC9zdmc+Cg==">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMGExMDI0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA0OThmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9InVybCgjYikiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjM0IiByPSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjIuMiIgb3BhY2l0eT0iLjU1Ii8+PGVsbGlwc2UgY3g9IjMxIiBjeT0iMzQiIHJ4PSI2LjUiIHJ5PSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjEuNiIgb3BhY2l0eT0iLjUiLz48bGluZSB4MT0iMTYiIHkxPSIzNCIgeDI9IjQ2IiB5Mj0iMzQiIHN0cm9rZT0iIzNhOGVlMCIgc3Ryb2tlLXdpZHRoPSIxLjYiIG9wYWNpdHk9Ii41Ii8+PHBhdGggZD0iTTE0IDQ4IEw1MiAxNCBMNDAgNDcgTDM2IDM3IFoiIGZpbGw9IiNmZmJlMjAiLz48cGF0aCBkPSJNMTQgNDggTDM2IDM3IEwyNCA1MCBaIiBmaWxsPSIjZGViNDQ3Ii8+PC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -124,6 +126,14 @@
   .fstrip.go{border-left-color:var(--go)} .fstrip.cau{border-left-color:var(--cau)} .fstrip.nogo{border-left-color:var(--nogo)}
   .fhd{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px}
   .flogo{width:22px;height:22px;border-radius:5px;object-fit:contain;background:#fff;padding:1px}
+  .flogo-w{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 22px;vertical-align:middle}
+  .flogo-mono{display:none;width:22px;height:22px;border-radius:5px;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;font-weight:700;color:#fff;letter-spacing:.3px;line-height:1}
+  .flogo-w.noimg .flogo-mono{display:inline-flex}
+  .fprice-row{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .fprice-row .cur{color:var(--dim);margin-right:-3px}
+  .fprice{width:60px;padding:3px 6px;font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:6px;color:var(--txt);text-align:right}
+  .fprice:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.08)}
+  .esttag{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:#ffce4a;border:1px solid rgba(255,206,74,.4);border-radius:4px;padding:1px 5px}
   .fpill{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:20px;font-weight:700}
   .fpill.go{background:rgba(39,213,136,.16);color:var(--go)} .fpill.cau{background:rgba(245,179,66,.16);color:var(--cau)} .fpill.nogo{background:rgba(255,90,90,.16);color:var(--nogo)}
   .fpill.nonstop{background:rgba(39,213,136,.9);color:#04130b;font-weight:800}
@@ -312,11 +322,20 @@
         <label style="margin-top:9px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--dim);cursor:pointer">
           <input id="autoCheck" type="checkbox" style="width:auto"> Auto-check flights when a trip loads (drives the stoplight — uses quota)
         </label>
+        <label style="margin-top:7px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--dim);cursor:pointer">
+          <input id="livePrices" type="checkbox" style="width:auto"> Fetch live ticket prices with Auto-search (free SerpApi key in your Worker)
+        </label>
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
         <div id="gwCfg" style="margin-top:7px;display:grid;gap:7px"></div>
         <button class="btn ghost" id="addGw" style="margin-top:8px;font-size:11px;padding:7px 11px">+ add gateway</button>
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Typical fares — same-day one-way walk-up ($) per route</label>
+        <div id="fareCfg" style="margin-top:7px;display:grid;gap:7px"></div>
+        <button class="btn ghost" id="addFare" style="margin-top:8px;font-size:11px;padding:7px 11px">+ add route fare</button>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5">Prefilled into the net math so a search shows take-home instantly. The app also learns a route automatically whenever you confirm a price on a flight.</div>
       </div>
       <div class="field">
         <label>Buffer rule</label>
@@ -355,7 +374,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 25 · 2026-06-21 · last-safe-flight backup + TAF/METAR weather flags (free NWS, no quota)</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27 · 2026-06-21 · live ticket prices via SerpApi (free, no card) → real net pay-vs-ticket</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -384,13 +403,13 @@ const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
 const DEFAULT_WORKER='https://ot-flights.ccwaldo.workers.dev';
-const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360, autoCheck:true,
+const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360, autoCheck:true, fares:{}, livePrices:true,
   gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}],
   sortByPay:false, mySeatOnly:false, hidePast:false };
 const US_HUBS=new Set(['ATL','DFW','DEN','ORD','CLT','IAH','PHX','LAS','MSP','DTW','SLC','SEA','EWR','JFK','LGA','BOS','MIA','LAX','SFO','PHL','IAD','DCA','MDW','TPA','AUS','DAL','HOU','BNA','RDU','STL','MCI','CLE','CVG','PIT','IND','CMH','SAT','SJC','OAK','PDX','SMF','RSW','SDF','MEM','ABQ','ONT','BUR','HNL','BWI','SAN','FLL','MCO']);
 const LS_KEY='otcc_cfg_v1';
 function saveCfg(){try{localStorage.setItem(LS_KEY,JSON.stringify(CFG));}catch(e){}}
-function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){} if(!CFG.workerUrl)CFG.workerUrl=DEFAULT_WORKER;}
+function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){} if(!CFG.workerUrl)CFG.workerUrl=DEFAULT_WORKER; if(!CFG.fares||typeof CFG.fares!=='object')CFG.fares={};}
 const SEARCH_CACHE=new Map();
 const WX_CACHE=new Map();
 loadCfg();
@@ -492,6 +511,25 @@ const p=n=>String(n).padStart(2,'0');
 const dur=mins=>{const s=mins<0?'-':'';mins=Math.abs(mins);return `${s}${Math.floor(mins/60)}h${p(mins%60)}`;};
 const gflights=(gw,dest,date)=>`https://www.google.com/travel/flights?q=`+encodeURIComponent(`Flights to ${dest} from ${gw} on ${date}`);
 const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+// airline logo with graceful monogram fallback (works offline / when the CDN misses)
+function airlineLogo(c){c=(c||'').toString().toUpperCase().replace(/[^A-Z0-9]/g,'');let h=7;for(let i=0;i<c.length;i++)h=(h*31+c.charCodeAt(i))%360;return `<span class="flogo-w"><img class="flogo" src="https://images.kiwi.com/airlines/64/${c}.png" alt="${c}" loading="lazy" onerror="this.parentNode.classList.add('noimg');this.remove();"><span class="flogo-mono" style="background:hsl(${h},52%,40%)">${c}</span></span>`;}
+// per-route typical same-day fare (learned + editable in Settings)
+const fareKey=(gw,dest)=>(gw&&dest)?`${gw}-${dest}`.toUpperCase():null;
+const typicalFare=(gw,dest)=>{const k=fareKey(gw,dest);return (k&&CFG.fares&&CFG.fares[k]!=null)?+CFG.fares[k]:null;};
+// parse SerpApi google_flights JSON -> {byFlight:{"DL1234":price}, routeMin}
+function parseSerpPrices(j){
+  const byFlight={}; let routeMin=null;
+  const add=it=>{ if(!it||typeof it.price!=='number')return;
+    if(routeMin==null||it.price<routeMin)routeMin=it.price;
+    const segs=it.flights||[];
+    if(segs.length===1){ const fn=(segs[0].flight_number||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if(fn&&(byFlight[fn]==null||it.price<byFlight[fn]))byFlight[fn]=it.price; }
+  };
+  (j.best_flights||[]).forEach(add); (j.other_flights||[]).forEach(add);
+  const li=j.price_insights&&j.price_insights.lowest_price;
+  if(typeof li==='number'&&(routeMin==null||li<routeMin))routeMin=li;
+  return {byFlight,routeMin};
+}
 function fmtReset(ms){ try{
   const when=new Intl.DateTimeFormat('en-US',{timeZone:CFG.tz,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(new Date(ms));
   const diff=ms-Date.now(); const d=Math.floor(diff/864e5); const h=Math.max(1,Math.round(diff/36e5));
@@ -705,8 +743,8 @@ function render(parsed){
 
       const banner = bestNs ? `<div class="fbanner">
           <div class="fbk">✈ NONSTOP fits your window</div>
-          <div class="fbv"><img class="flogo" src="https://images.kiwi.com/airlines/64/${bestNs.carrier}.png" alt="" onerror="this.style.display='none'">
-            <b>${bestNs.carrier}${bestNs.num}</b> · ${bestNs.gw}→${a.dest} · arr <b>${zt(bestNs.arrMs)}</b> ${flocal(bestNs.arrMs)}${bestNs.price!=null?` · ${money(bestNs.price)}`:''}</div>
+          <div class="fbv">${airlineLogo(bestNs.carrier)}
+            <b>${bestNs.carrier}${bestNs.num}</b> · ${bestNs.gw}→${a.dest} · arr <b>${zt(bestNs.arrMs)}</b> ${flocal(bestNs.arrMs)}${bestNs.price!=null?` · ${bestNs.est?'≈':''}${money(bestNs.price)}`:''}</div>
           <div class="fbn">lands ${dur((a.anchorMs-bestNs.arrMs)/6e4)} before report · most rest of the nonstops that comply</div>
         </div>` : '';
 
@@ -716,8 +754,9 @@ function render(parsed){
                         : (f.stops>0 ? `<span class="fpill stop">${f.stops} STOP${f.stops>1?'S':''}</span>` : '');
         const star = (bestNs && f.id===bestNs.id) ? '★ best · nonstop'
                     : (!bestNs && backups.includes(f.id) ? (f.id===backups[backups.length-1]?'★ best · most rest':'✓ backup') : '');
-        const net=(f.price!=null)?` · ticket ${money(f.price)} · <span class="net">net ${money(gross-f.price)}</span>`:'';
-        const logo=`<img class="flogo" src="https://images.kiwi.com/airlines/64/${f.carrier}.png" alt="" onerror="this.style.display='none'">`;
+        const hasP=f.price!=null;
+        const priceLine=`<span class="cur">$</span><input class="fprice" data-id="${f.id}" inputmode="decimal" value="${hasP?Math.round(f.price):''}" placeholder="—" aria-label="ticket price"><span style="color:var(--dim)">ticket</span>${f.est?'<span class="esttag" title="your typical fare for this route — tap to confirm or change">typical</span>':''}${hasP?` · <span class="net">net ${money(gross-f.price)}</span>`:''}`;
+        const logo=airlineLogo(f.carrier);
         let routeLine=`${f.gw} → ${a.dest} · ${dur((f.arrMs-f.depMs)/6e4)}`;
         let connLine='', tightPill='';
         if(f.stops>=1&&Array.isArray(f.legs)&&f.legs.length>=2){
@@ -742,20 +781,29 @@ function render(parsed){
           <div class="frt">${routeLine}</div>
           <div class="ftimes"><span>dep <b>${zt(f.depMs)}</b> ${flocal(f.depMs)}</span><span>arr <b>${zt(f.arrMs)}</b> ${flocal(f.arrMs)}</span></div>
           ${connLine}
-          <div class="fnote">${note}${net}</div>
+          <div class="fnote">${note}</div>
+          <div class="fprice-row">${priceLine}</div>
         </div>`;
       }).join('');
       list.querySelectorAll('.frm').forEach(b=>b.addEventListener('click',()=>{const i=flights.findIndex(x=>x.id==b.dataset.id);if(i>=0)flights.splice(i,1);renderFlights();}));
+      list.querySelectorAll('.fprice').forEach(inp=>inp.addEventListener('change',()=>{
+        const f=flights.find(x=>x.id==inp.dataset.id); if(!f)return;
+        const v=parseFloat(inp.value);
+        if(isNaN(v)){ f.price=null; f.est=false; f.userPriced=false; }
+        else { f.price=Math.round(v); f.est=false; f.userPriced=true; const k=fareKey(f.gw,a.dest); if(k){ CFG.fares[k]=f.price; saveCfg(); if(typeof renderFareCfg==='function')renderFareCfg(); } }
+        renderFlights();
+      }));
     }
     q('.f-add').addEventListener('click',()=>{
       const car=q('.f-car').value.toUpperCase().trim(), num=q('.f-num').value.trim();
       const dep=q('.f-dep').value.trim(), arr=q('.f-arr').value.trim(), date=dSel.value;
-      const price=parseFloat(q('.f-price').value);
+      let price=parseFloat(q('.f-price').value); let pest=false;
+      if(isNaN(price)){ const tf=typicalFare(q('.f-gw').value,a.dest); if(tf!=null){ price=tf; pest=true; } }
       if(!/^[A-Z0-9]{2,3}$/.test(car)||!/^\d{3,4}$/.test(arr)){q('.f-car').focus();return;}
       let arrMs=mk(arr.padStart(4,'0'),date);
       let depMs=/^\d{3,4}$/.test(dep)?mk(dep.padStart(4,'0'),date):arrMs;
       if(depMs>arrMs)depMs-=864e5;
-      flights.push({id:Date.now()+''+Math.round(Math.random()*1e4),carrier:car,num,gw:q('.f-gw').value,depMs,arrMs,price:isNaN(price)?null:price});
+      flights.push({id:Date.now()+''+Math.round(Math.random()*1e4),carrier:car,num,gw:q('.f-gw').value,depMs,arrMs,price:isNaN(price)?null:price,est:pest});
       ['.f-car','.f-num','.f-dep','.f-arr','.f-price'].forEach(s=>q(s).value='');
       renderFlights();
     });
@@ -765,6 +813,40 @@ function render(parsed){
     const setFstat=(msg,kind)=>{if(!msg){fstat.style.display='none';return;}fstat.style.display='block';fstat.className='f-status '+(kind||'');fstat.textContent=msg;};
     const autoBtn=q('.f-auto');
     const cacheKey=`${a.dest}|${a.latestMs}|${CFG.maxStops}|${CFG.minConn}|${CFG.maxConn}|${CFG.gateways.filter(g=>g.code).map(g=>g.code).join(',')}`;
+    const PRICE_CACHE=new Map();
+    // pull live SerpApi fares (via the Worker) and attach to flights
+    async function priceFlights(){
+      if(!CFG.livePrices||!CFG.workerUrl)return;
+      const near=flights.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs);
+      const gwset=[...new Set((near.length?near:flights).map(f=>f.gw).filter(Boolean))].slice(0,6);
+      if(!gwset.length)return;
+      setFstat('Fetching live ticket prices…');
+      let priced=0;
+      for(const gw of gwset){
+        const dayKey=gw+'|'+Math.floor(a.latestMs/864e5);
+        let data=PRICE_CACHE.get(dayKey);
+        if(data===undefined){
+          const rep=flights.filter(f=>f.gw===gw).sort((x,y)=>x.depMs-y.depMs)[0];
+          const depMs=rep?rep.depMs:a.latestMs;
+          try{
+            const r=await fetch(`${CFG.workerUrl}?price=1&from=${encodeURIComponent(gw)}&to=${encodeURIComponent(a.dest)}&depMs=${depMs}`);
+            const j=await r.json();
+            data=(j&&!j.error)?parseSerpPrices(j):null;
+          }catch(e){ data=null; }
+          PRICE_CACHE.set(dayKey,data);
+        }
+        if(!data)continue;
+        for(const f of flights){
+          if(f.gw!==gw||f.userPriced)continue;
+          const fn=((f.carrier||'')+(f.num||'')).toUpperCase().replace(/[^A-Z0-9]/g,'');
+          if(f.stops===0&&data.byFlight[fn]!=null){ f.price=data.byFlight[fn]; f.est=false; f.live=true; priced++; }
+          else if(data.routeMin!=null&&(f.price==null||f.est)){ f.price=data.routeMin; f.est=true; f.live=true; priced++; }
+        }
+      }
+      renderFlights();
+      if(priced)setFstat(`Live prices added · SerpApi · ${priced} flight${priced===1?'':'s'} priced`,'ok');
+      else setFstat('No live fares matched (route not on Google Flights, or none that day) — using typical/manual.','');
+    }
     async function runAuto(){
       if(!CFG.workerUrl){setFstat('Set your Worker URL in Settings to auto-search.','err');return;}
       const lbl=autoBtn?autoBtn.textContent:'🔎 Auto-search'; if(autoBtn){autoBtn.disabled=true;autoBtn.textContent='Searching…';} setFstat('Searching nonstops + connections…');
@@ -786,7 +868,8 @@ function render(parsed){
           depthInfo={effMax:j.maxStops,reqMax:(j.requestedMaxStops!=null?j.requestedMaxStops:CFG.maxStops),hasNonstop:!!j.hasNonstop};
           for(const f of j.flights){
             if(!f.tzKnown||!f.arr){skipped++;continue;}
-            got.push({id:'a'+(f.gw||'')+f.carrier+f.num+f.dep+(f.via||''),carrier:f.carrier,num:f.num,gw:f.gw||'',depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),via:f.via||null,legs:Array.isArray(f.legs)?f.legs:null,auto:true});
+            const _tf=typicalFare(f.gw||'',a.dest); const _p=(f.price!=null?+f.price:_tf);
+          got.push({id:'a'+(f.gw||'')+f.carrier+f.num+f.dep+(f.via||''),carrier:f.carrier,num:f.num,gw:f.gw||'',depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(_p!=null?_p:null),est:(f.price==null&&_tf!=null),stops:(typeof f.stops==='number'?f.stops:null),via:f.via||null,legs:Array.isArray(f.legs)?f.legs:null,auto:true});
           }
           SEARCH_CACHE.set(cacheKey,got);
         } else { errs++; if(j&&j.error)setFstat('Worker: '+j.error,'err'); }
@@ -806,6 +889,7 @@ function render(parsed){
       if(quotaRemaining!=null&&+quotaRemaining<=25)msg+=` · ⚠ ${quotaRemaining} searches left this month`;
       setFstat(msg, auto.length?'ok':'err');
       if(autoBtn){autoBtn.disabled=false; autoBtn.textContent=lbl;}
+      if(CFG.livePrices&&got.length) priceFlights();
     }
     if(autoBtn) autoBtn.addEventListener('click',runAuto);
     // prime the stoplight from real flights: reuse cached results, else auto-check on load
@@ -1039,6 +1123,8 @@ if(minConnIn){ minConnIn.value=CFG.minConn; minConnIn.addEventListener('change',
 if(maxConnIn){ maxConnIn.value=CFG.maxConn; maxConnIn.addEventListener('change',()=>{CFG.maxConn=Math.max(CFG.minConn+30,Math.min(720,+maxConnIn.value||360)); maxConnIn.value=CFG.maxConn; saveCfg(); reRender();}); }
 const autoCheckIn=document.getElementById('autoCheck');
 if(autoCheckIn){ autoCheckIn.checked=!!CFG.autoCheck; autoCheckIn.addEventListener('change',()=>{CFG.autoCheck=autoCheckIn.checked; saveCfg();}); }
+const livePricesIn=document.getElementById('livePrices');
+if(livePricesIn){ livePricesIn.checked=!!CFG.livePrices; livePricesIn.addEventListener('change',()=>{CFG.livePrices=livePricesIn.checked; saveCfg();}); }
 
 const gwCfg=$('gwCfg');
 function renderGwCfg(){
@@ -1060,6 +1146,31 @@ function renderGwCfg(){
 }
 renderGwCfg();
 $('addGw').addEventListener('click',()=>{CFG.gateways.push({code:'',drive:60}); renderGwCfg();});
+
+const fareCfg=$('fareCfg');
+function renderFareCfg(){
+  if(!fareCfg)return;
+  const ents=Object.entries(CFG.fares||{});
+  fareCfg.innerHTML = ents.length ? ents.map(([k,v])=>
+    `<div style="display:flex;gap:7px;align-items:center">
+       <input data-k="${k}" data-f="route" value="${k}" placeholder="IAH-ORD" maxlength="9" style="flex:0 0 108px;text-transform:uppercase;font-family:var(--mono);font-size:11px">
+       <span style="font-family:var(--mono);font-size:11px;color:var(--dim)">$</span>
+       <input data-k="${k}" data-f="amt" type="number" min="0" step="5" value="${v}" style="flex:1;text-align:right">
+       <button data-rmf="${k}" class="btn ghost" style="padding:6px 9px;font-size:11px">✕</button>
+     </div>`).join('')
+    : '<div style="font-family:var(--mono);font-size:10px;color:var(--dim)">None yet — add a route, or confirm a price on any flight to learn one.</div>';
+  fareCfg.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',e=>{
+    const oldK=e.target.dataset.k, row=e.target.parentNode;
+    const route=row.querySelector('[data-f="route"]').value.toUpperCase().trim().replace(/[^A-Z0-9-]/g,'');
+    const amt=Math.round(parseFloat(row.querySelector('[data-f="amt"]').value));
+    delete CFG.fares[oldK];
+    if(route && !isNaN(amt) && amt>0) CFG.fares[route]=amt;
+    saveCfg(); renderFareCfg(); reRender();
+  }));
+  fareCfg.querySelectorAll('[data-rmf]').forEach(b=>b.addEventListener('click',()=>{ delete CFG.fares[b.dataset.rmf]; saveCfg(); renderFareCfg(); reRender(); }));
+}
+renderFareCfg();
+$('addFare').addEventListener('click',()=>{ if(!CFG.fares['NEW-XXX'])CFG.fares['NEW-XXX']=0; renderFareCfg(); });
 updateProfile();
 
 /* live zulu clock */
