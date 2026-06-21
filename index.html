@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OT Commute — Bid Decision Aid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js"></script>
+<style>
+  :root{
+    /* Teamsters Local 2750 palette on a dark command-console base */
+    --tblue:#00498f; --tblue-lite:#3a8ee0; --tyellow:#ffbe20; --blue2750:#212e67; --gold:#deb447;
+    --bg:#060a14; --bg2:#0a1024;
+    --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.025);
+    --glass:rgba(13,21,44,.55);
+    --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
+    --txt:#eaf0ff; --muted:#9fb0d4; --dim:#647aa3;
+    --accent:var(--tblue-lite); --link:#74b6ff;
+    --go:#27d588; --cau:#ffce4a; --nogo:#ff5663;
+    --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'IBM Plex Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;line-height:1.45;padding-bottom:60px;position:relative;overflow-x:hidden}
+  /* aurora backdrop */
+  body::before{content:"";position:fixed;inset:-20% -10% -10% -10%;z-index:-2;
+    background:
+      radial-gradient(40% 35% at 18% 12%, rgba(0,73,143,.55), transparent 70%),
+      radial-gradient(38% 30% at 85% 8%, rgba(33,46,103,.55), transparent 70%),
+      radial-gradient(45% 40% at 75% 88%, rgba(222,180,71,.16), transparent 70%),
+      radial-gradient(40% 35% at 10% 92%, rgba(58,142,224,.20), transparent 70%);
+    filter:blur(8px);animation:drift 26s ease-in-out infinite alternate}
+  body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:linear-gradient(180deg,rgba(6,10,20,.2),rgba(6,10,20,.78)),
+      repeating-linear-gradient(0deg,transparent 0 38px,rgba(255,255,255,.012) 38px 39px);}
+  @keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-2%,1.5%,0) scale(1.06)}100%{transform:translate3d(2%,-1%,0) scale(1.03)}}
+  a{color:var(--link);text-decoration:none}
+  .wrap{max-width:780px;margin:0 auto;padding:0 14px}
+
+  header{position:sticky;top:0;z-index:20;padding:13px 0 11px;
+    background:linear-gradient(120deg,rgba(0,73,143,.92),rgba(33,46,103,.92));
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(255,190,32,.55);
+    box-shadow:0 1px 0 rgba(255,190,32,.25),0 10px 30px -12px rgba(0,0,0,.7)}
+  header::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;
+    background:linear-gradient(90deg,transparent,var(--tyellow),var(--gold),transparent);
+    background-size:200% 100%;animation:sheen 6s linear infinite;opacity:.9}
+  @keyframes sheen{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{font-family:var(--mono);font-weight:700;letter-spacing:.08em;font-size:15px;color:#fff;text-shadow:0 0 18px rgba(0,0,0,.4)}
+  .brand b{color:var(--tyellow);text-shadow:0 0 14px rgba(255,190,32,.6)}
+  .sub{font-family:var(--mono);font-size:10px;color:rgba(234,240,255,.72);letter-spacing:.14em;text-transform:uppercase;margin-top:3px}
+  .zclock{font-family:var(--mono);font-size:13px;color:#bff7da;letter-spacing:.06em;font-variant-numeric:tabular-nums;
+    border:1px solid rgba(39,213,136,.4);border-radius:8px;padding:6px 10px;white-space:nowrap;
+    background:rgba(39,213,136,.08);box-shadow:0 0 18px -4px rgba(39,213,136,.5),inset 0 0 12px -6px rgba(39,213,136,.6)}
+  .zclock small{color:#6fe6ad;margin-right:2px}
+
+  .bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+  .btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s border-color;
+    background:var(--panel);color:var(--txt);border:1px solid var(--line2);border-radius:9px;padding:10px 13px;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .btn:hover{border-color:var(--tblue-lite);transform:translateY(-1px);box-shadow:0 8px 22px -10px rgba(58,142,224,.7)}
+  .btn:active{transform:translateY(0)}
+  .btn.solid{background:linear-gradient(135deg,var(--tyellow),var(--gold));color:#241a00;border-color:transparent;font-weight:700;
+    box-shadow:0 6px 20px -6px rgba(255,190,32,.6)}
+  .btn.solid:hover{box-shadow:0 10px 26px -6px rgba(255,190,32,.8)}
+  .btn.ghost{background:transparent;color:var(--muted)}
+
+  details.cfg{border:1px solid var(--line);border-radius:12px;background:var(--glass);margin:10px 0;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  details.cfg>summary{list-style:none;cursor:pointer;padding:12px 14px;font-family:var(--mono);
+    font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:flex;justify-content:space-between}
+  details.cfg>summary::-webkit-details-marker{display:none}
+  details.cfg[open]>summary{color:var(--tyellow)}
+  .cfgbody{padding:4px 14px 16px;display:grid;gap:14px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  select,input[type=number],input[type=text]{font-family:var(--mono);font-size:13px;background:rgba(8,13,28,.7);
+    color:var(--txt);border:1px solid var(--line2);border-radius:8px;padding:9px 10px;width:100%;transition:.15s box-shadow,.15s border-color}
+  select:focus,input:focus{outline:none;border-color:var(--tyellow);box-shadow:0 0 0 3px rgba(255,190,32,.25)}
+  option{background:#0a1024}
+  .gw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px}
+  .gw-grid .field input{text-align:right}
+
+  textarea{width:100%;min-height:120px;font-family:var(--mono);font-size:12px;background:rgba(8,13,28,.7);
+    color:var(--txt);border:1px dashed var(--line2);border-radius:10px;padding:11px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--tyellow);box-shadow:0 0 0 3px rgba(255,190,32,.2)}
+  .drop{border:1.5px dashed var(--line2);border-radius:12px;padding:16px;text-align:center;color:var(--muted);
+    font-family:var(--mono);font-size:12px;margin-top:8px;transition:.18s;background:var(--panel2)}
+  .drop.over{border-color:var(--tyellow);color:var(--tyellow);background:rgba(255,190,32,.07);box-shadow:0 0 26px -6px rgba(255,190,32,.5)}
+
+  .summary{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:18px 0 8px;letter-spacing:.04em}
+  .status{font-family:var(--mono);font-size:11.5px;margin-top:9px;padding:10px 12px;border-radius:9px;line-height:1.5;
+    border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09);color:#bcd8ff}
+  .status.work{border-color:rgba(255,206,74,.45);background:rgba(255,206,74,.09);color:var(--cau)}
+  .status.err{border-color:rgba(255,86,99,.45);background:rgba(255,86,99,.09);color:#ff929a}
+  .ocrwarn{font-family:var(--mono);font-size:11px;margin:0 0 4px;padding:9px 11px;border-radius:9px;line-height:1.5;
+    border:1px solid rgba(255,206,74,.5);background:rgba(255,206,74,.1);color:var(--cau)}
+  .ocrwarn b{color:#ffd968}
+
+  /* trip card */
+  .card{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--glass);margin:14px 0;overflow:hidden;
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 50px -26px rgba(0,0,0,.85);
+    opacity:0;transform:translateY(16px) scale(.99);animation:cardIn .5s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes cardIn{to{opacity:1;transform:none}}
+  .card.dim{filter:grayscale(.45) opacity(.62)}
+  .ctop{display:flex;align-items:stretch}
+  .lamp{position:relative;flex:0 0 102px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:4px;padding:14px 8px;border-right:1px solid var(--line);overflow:hidden}
+  .lamp::before{content:"";position:absolute;inset:0;background:radial-gradient(62% 58% at 50% 42%,currentColor,transparent 72%);opacity:.16}
+  .lamp .dot{width:13px;height:13px;border-radius:50%;background:currentColor;box-shadow:0 0 14px 2px currentColor;z-index:1}
+  .lamp.go .dot{animation:pulse 1.9s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 9px 1px currentColor;transform:scale(1)}50%{box-shadow:0 0 22px 6px currentColor;transform:scale(1.16)}}
+  .lamp .v{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.06em;color:currentColor;text-shadow:0 0 16px currentColor;z-index:1}
+  .lamp .vs{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-align:center;text-transform:uppercase;z-index:1}
+  .go{color:var(--go)} .cau{color:var(--cau)} .nogo{color:var(--nogo)}
+  .chead{flex:1;padding:12px 14px;min-width:0}
+  .chead .pid{font-family:var(--mono);font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff}
+  .chead .route{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:3px 7px;border-radius:6px;
+    border:1px solid var(--line2);color:var(--muted);background:rgba(255,255,255,.03)}
+  .tag.fo{color:#9fd0ff;border-color:rgba(58,142,224,.5);background:rgba(58,142,224,.1)}
+  .tag.ca{color:var(--cau);border-color:rgba(255,206,74,.4);background:rgba(255,206,74,.08)}
+  .tag.pay{color:#1a1200;border:none;font-weight:700;background:linear-gradient(115deg,var(--tyellow),var(--gold),var(--tyellow));
+    background-size:200% 100%;box-shadow:0 0 18px -4px rgba(255,190,32,.7);animation:payShimmer 5s linear infinite}
+  @keyframes payShimmer{0%{background-position:0 0}100%{background-position:200% 0}}
+
+  .cbody{padding:0 14px 14px;display:grid;gap:13px}
+  .basis{font-family:var(--mono);font-size:11.5px;color:var(--muted);border-left:2px solid var(--tblue-lite);
+    padding-left:10px;line-height:1.5}
+  .basis b{color:var(--txt)}
+
+  .win{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .win div{background:rgba(10,16,36,.6);padding:10px 9px}
+  .win .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;color:var(--dim);text-transform:uppercase}
+  .win .t{font-family:var(--mono);font-size:13px;margin-top:3px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .win .t small{color:var(--muted);font-size:10px}
+  .win .hard{background:rgba(255,86,99,.08)}
+  .win .hard .t{color:#ff929a;font-weight:700;text-shadow:0 0 12px rgba(255,86,99,.45)}
+
+  .sech{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tblue-lite);margin-bottom:-3px}
+
+  .gw{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);transition:.16s}
+  .gw:hover{border-color:var(--tblue-lite);background:rgba(58,142,224,.09);transform:translateX(2px)}
+  .gw .code{font-family:var(--mono);font-weight:700;font-size:14px;width:42px;color:#cfe2ff}
+  .gw .drive{font-family:var(--mono);font-size:11px;color:var(--muted);flex:1}
+  .gw .drive b{color:var(--txt);font-weight:600}
+  .gw a.search{font-family:var(--mono);font-size:11.5px;border:1px solid rgba(255,190,32,.5);color:var(--tyellow);
+    padding:7px 11px;border-radius:8px;white-space:nowrap;transition:.15s}
+  .gw a.search:hover{background:var(--tyellow);color:#241a00;box-shadow:0 0 18px -4px rgba(255,190,32,.7)}
+
+  .dho{border:1px solid rgba(255,206,74,.35);background:rgba(255,206,74,.07);border-radius:10px;padding:11px 12px;
+    font-family:var(--mono);font-size:11.5px;color:var(--cau);line-height:1.5}
+  .dho b{color:#ffd968}
+  .costline{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.65}
+  .costline b{color:var(--txt);font-weight:600}
+  .costline .drivers{color:var(--dim);font-size:10.5px;margin-top:3px}
+  .otrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:-2px}
+  .otrow select{width:auto;padding:6px 8px;font-size:11.5px}
+  .otrow .otsub{color:var(--dim)}
+
+  .eval{border:1px solid var(--line2);border-radius:12px;padding:12px;background:linear-gradient(180deg,rgba(0,73,143,.12),rgba(33,46,103,.06))}
+  .eval .row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .eval .row3{display:grid;grid-template-columns:1.3fr 1fr;gap:9px;align-items:end}
+  .verdict-eval{font-family:var(--mono);font-size:12px;margin-top:10px;padding:10px 11px;border-radius:8px;
+    border:1px solid var(--line2);line-height:1.5;background:rgba(0,0,0,.22)}
+  .verdict-eval .big{font-size:13px;font-weight:700;letter-spacing:.04em}
+  .net{font-family:var(--mono);font-size:15px;color:#7ef0b6;font-weight:700;text-shadow:0 0 14px rgba(39,213,136,.4);font-variant-numeric:tabular-nums}
+
+  .empty{border:1px dashed var(--line2);border-radius:14px;padding:36px 16px;text-align:center;
+    color:var(--muted);font-family:var(--mono);font-size:12.5px;margin-top:16px;line-height:1.7;background:var(--panel2)}
+  .foot{font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.6;margin:28px 0 8px;
+    border-top:1px solid var(--line);padding-top:14px}
+  .foot b{color:var(--muted)}
+  @media (max-width:480px){
+    .lamp{flex-basis:84px}
+    .win{grid-template-columns:1fr 1fr}
+    .win .rep{grid-column:1/-1}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important}
+    .card{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<header><div class="wrap hrow">
+  <div>
+    <div class="brand">OT&nbsp;<b>COMMUTE</b>&nbsp;CHECK</div>
+    <div class="sub" id="profileLine">747 FO · ORD · 6th yr · home IAH/HOU/AUS/CLL</div>
+  </div>
+  <div class="zclock" id="zclock"><small>Z</small> ----</div>
+</div></header>
+
+<div class="wrap">
+  <div class="bar">
+    <label class="btn" style="display:inline-flex;align-items:center;gap:7px">
+      <input id="file" type="file" accept=".eml,.txt,.pdf,application/pdf,message/rfc822" multiple style="display:none">
+      ↥ Open .eml / .pdf
+    </label>
+    <button class="btn" id="pasteBtn">⌨ Paste text</button>
+    <button class="btn ghost" id="sampleBtn">▷ Load sample</button>
+    <button class="btn ghost" id="clearBtn">✕ Clear</button>
+  </div>
+
+  <details class="cfg" id="cfg">
+    <summary><span>Profile &amp; gateways</span><span id="cfgState">›</span></summary>
+    <div class="cfgbody">
+      <div class="field">
+        <label>B747 FO longevity (year) — sets pay rate, 9/01/25 scale</label>
+        <select id="yos"></select>
+      </div>
+      <div class="field">
+        <label>Per diem $/hr on TAFB (≈2026: $3.15 CONUS / $3.90 OCONUS, +$0.10/yr)</label>
+        <input id="perdiem" type="number" step="0.05" value="3.90">
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Drive time from Tomball to gateway (min)</label>
+        <div class="gw-grid" id="gwCfg" style="margin-top:7px"></div>
+      </div>
+      <div class="field">
+        <label>Buffer rule</label>
+        <div style="font-family:var(--mono);font-size:11.5px;color:var(--muted)">Report = STD − 1:30 (747) · land ≥ 3:00 before report · no earlier than 24:00 before</div>
+      </div>
+    </div>
+  </details>
+
+  <div id="pasteWrap" style="display:none;margin-top:8px">
+    <textarea id="paste" placeholder="Paste the body of the OT notification email here…"></textarea>
+    <button class="btn solid" id="runPaste" style="margin-top:8px">Analyze</button>
+  </div>
+
+  <div class="drop" id="drop">Drop an .eml or Outlook .pdf here, or use the buttons above</div>
+  <div id="status" class="status" style="display:none"></div>
+
+  <div id="out"></div>
+
+  <div class="foot">
+    Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset assumes 747 (1:30); "one calendar day" treated as 24:00; per diem is an editable estimate.
+  </div>
+</div>
+
+<script>
+/* ============ embedded sample bodies ============ */
+const SAMPLES = {"Short_notice_open_time_event_open_for_bidding.eml":"Short Notice Open Time event name: Short_2026-06-20_6\r\nBidding Open Time: 2026-06-20 12:01:03z\r\nBidding Closing Time: 2026-06-20 14:01:03z\r\n\r\nCrew Members,\r\nIn accordance with Article 25 Q 8, the company is offering a Short Notice Open Time event that contains\r\none or more trips for your fleet.\r\n\r\nAnyone wishing to bid for these trips should log on to the Atlas Open Time bidding system here https://OpenTime.AtlasAir.com\r\nand place bids for the trips.\r\n\r\nContact Atlas crew scheduling for assistance with the Open Time bidding system.\r\n\r\nTrips Associated with this event:\r\nPairing ID      Base    Equipment       Seat    Bid Cycle       Start Date\r\nZ4001   ORD     747     FO      1       2026-06-20 22:00:00z\r\n\r\nTrip : Z4001\r\nFlight  DEP     ARR     DATE    STD     STA     Day     DH      Block Hours\r\n5Y7482  ORD     FRA     Sat20Jun        2200z   0630z   1               8:30\r\nUA945   FRA     ORD     Mon22Jun        0650z   1600z   2       DH      9:10\r\nTrip Reporting Time : 2026-06-20 20:30:00z      Block Hours : 8:30\r\nTrip Debrief Time : 2026-06-22 16:30:00z        Credit Hours : 13.08\r\nTime Away From Base : 44:00 (1 day & 20:00 hours)z      CRT Hours : 8.89\r\nGo to trips list","Short_notice_open_time_event_open_for_bidding__1_.eml":"Short Notice Open Time event name: Short_2026-06-20_5\r\nBidding Open Time: 2026-06-20 12:00:49z\r\nBidding Closing Time: 2026-06-20 14:00:49z\r\n\r\nCrew Members,\r\nIn accordance with Article 25 Q 8, the company is offering a Short Notice Open Time event that contains\r\none or more trips for your fleet.\r\n\r\nAnyone wishing to bid for these trips should log on to the Atlas Open Time bidding system here https://OpenTime.AtlasAir.com\r\nand place bids for the trips.\r\n\r\nContact Atlas crew scheduling for assistance with the Open Time bidding system.\r\n\r\nTrips Associated with this event:\r\nPairing ID      Base    Equipment       Seat    Bid Cycle       Start Date\r\nZ4000   ANC     747     CA      1       2026-06-22 08:35:00z\r\n\r\nTrip : Z4000\r\nFlight  DEP     ARR     DATE    STD     STA     Day     DH      Block Hours\r\n5Y537   ANC     PVG     Mon22Jun        0835z   1800z   1               9:25\r\n5Y812   PVG     ANC     Tue23Jun        2120z   0625z   2               9:05\r\nTrip Reporting Time : 2026-06-22 07:05:00z      Block Hours : 18:30\r\nTrip Debrief Time : 2026-06-24 06:55:00z        Credit Hours : 18.50\r\nTime Away From Base : 47:50 (1 day & 23:50 hours)z      CRT Hours : 9.66\r\nGo to trips list","Short_notice_open_time_event_open_for_bidding__2_.eml":"Short Notice Open Time event name: Short_2026-06-20_1\r\nBidding Open Time: 2026-06-20 00:51:04z\r\nBidding Closing Time: 2026-06-20 02:51:04z\r\n\r\nCrew Members,\r\nIn accordance with Article 25 Q 8, the company is offering a Short Notice Open Time event that contains\r\none or more trips for your fleet.\r\n\r\nAnyone wishing to bid for these trips should log on to the Atlas Open Time bidding system here https://OpenTime.AtlasAir.com\r\nand place bids for the trips.\r\n\r\nContact Atlas crew scheduling for assistance with the Open Time bidding system.\r\n\r\nTrips Associated with this event:\r\nPairing ID      Base    Equipment       Seat    Bid Cycle       Start Date\r\nZ4441   XXX     747     FO      1       2026-06-20 01:15:00z\r\nZ4442   XXX     747     FO      1       2026-06-20 01:15:00z\r\nZ4443   XXX     747     CA      1       2026-06-20 01:15:00z\r\n\r\nTrip : Z4441\r\nFlight  DEP     ARR     DATE    STD     STA     Day     DH      Block Hours\r\nKL644   JFK     AMS     Sat20Jun        0115z   0835z   1       DH      7:20\r\n5Y5579  AMS     ICN     Sun21Jun        1645z   0455z   3               12:10\r\n5Y628   ICN     ANC     Tue23Jun        0335z   1150z   4               8:15\r\nQF7581  ANC     JFK     Wed24Jun        0945z   1655z   6       DH      7:10\r\nTrip Reporting Time : 2026-06-19 23:45:00z      Block Hours : 20:25\r\nTrip Debrief Time : 2026-06-24 17:25:00z        Credit Hours : 27.67\r\nTime Away From Base : 113:40 (4 days & 17:40 hours)z    CRT Hours : 22.96\r\nGo to trips list\r\n\r\nTrip : Z4442\r\nFlight  DEP     ARR     DATE    STD     STA     Day     DH      Block Hours\r\nKL644   JFK     AMS     Sat20Jun        0115z   0835z   1       DH      7:20\r\n5Y5579  AMS     ICN     Sun21Jun        1645z   0455z   3               12:10\r\n5Y628   ICN     ANC     Tue23Jun        0335z   1150z   4       DH      8:15\r\nQF7581  ANC     JFK     Wed24Jun        0945z   1655z   6       DH      7:10\r\nTrip Reporting Time : 2026-06-19 23:45:00z      Block Hours : 12:10\r\nTrip Debrief Time : 2026-06-24 17:25:00z        Credit Hours : 23.54\r\nTime Away From Base : 113:40 (4 days & 17:40 hours)z    CRT Hours : 22.96\r\nGo to trips list\r\n\r\nTrip : Z4443\r\nFlight  DEP     ARR     DATE    STD     STA     Day     DH      Block Hours\r\nKL644   JFK     AMS     Sat20Jun        0115z   0835z   1       DH      7:20\r\n5Y5579  AMS     ICN     Sun21Jun        1645z   0455z   3               12:10\r\n5Y628   ICN     ANC     Tue23Jun        0335z   1150z   4               8:15\r\nQF7581  ANC     JFK     Wed24Jun        0945z   1655z   6       DH      7:10\r\nTrip Reporting Time : 2026-06-19 23:45:00z      Block Hours : 20:25\r\nTrip Debrief Time : 2026-06-24 17:25:00z        Credit Hours : 27.67\r\nTime Away From Base : 113:40 (4 days & 17:40 hours)z    CRT Hours : 22.96\r\nGo to trips list"};
+
+/* ============ engine (validated) ============ */
+const PAY_747_FO={1:103.55,2:145.45,3:181.14,4:185.67,5:190.31,6:195.07,7:199.95,8:204.95,9:210.07,10:215.32,11:220.70,12:226.22};
+const OFFSET_MIN=90, BUFFER_MIN=180, EARLY_MIN=24*60;
+const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
+const CFG={ yos:6, perDiem:3.90, gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}], seat:'FO' };
+
+function parseZ(s){const m=s.trim().match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+  return m?Date.UTC(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+(m[6]||0)):null;}
+function segDT(token,hhmm,year){const t=token.match(/^[A-Za-z]{3}(\d{1,2})([A-Za-z]{3})$/);
+  if(!t)return null;return Date.UTC(year,MON[t[2]],+t[1],+hhmm.slice(0,2),+hhmm.slice(2,4));}
+function getBody(raw){
+  if(/content-type:\s*text\/plain/i.test(raw)){
+    let rest=raw.slice(raw.search(/content-type:\s*text\/plain/i));
+    rest=rest.replace(/^[\s\S]*?\r?\n\r?\n/,'').split(/\r?\n--[-=_A-Za-z0-9]+/)[0];
+    return rest;
+  } return raw;
+}
+function hm(s){const m=(s||'').match(/^\s*(\d{1,3}):(\d{2})/);return m?+m[1]+(+m[2])/60:null;}
+function normalize(raw){
+  // repair Outlook-PDF reflow: drop page numbers, reattach orphan time tokens + split TAFB line
+  let lines=raw.replace(/\r/g,'').split('\n').filter(l=>!/^\s*\d+\s*\/\s*\d+\s*$/.test(l));
+  const out=[];
+  for(const l of lines){const t=l.trim();
+    if(/^\d{1,2}:\d{2}:\d{2}z$/.test(t)){for(let i=out.length-1;i>=0;i--)if(/\d{4}-\d{2}-\d{2}\s*$/.test(out[i])){out[i]=out[i].replace(/\s+$/,'')+' '+t;break;}continue;}
+    if(/^\d{1,2}:\d{2}\s*hours\)z$/i.test(t)){for(let i=out.length-1;i>=0;i--)if(/Time Away From Base/i.test(out[i])){out[i]=out[i].replace(/\s+$/,'')+' '+t;break;}continue;}
+    out.push(l);}
+  return out.join('\n');
+}
+function parseEmail(raw){
+  const body=normalize(getBody(raw));
+  const close=(body.match(/Bidding Closing Time:\s*([\d-]+ [\d:]+)z/i)||[])[1];
+  const closeMs=close?parseZ(close):null;
+  const year=close?+close.slice(0,4):new Date().getUTCFullYear();
+  const meta={};
+  const tableRe=/^(Z\d+)\s+([A-Z]{3})\s+(\d{3})\s+([A-Z]{2})\s+\d+\s+([\d-]+ [\d:]+)z/gm;
+  let tm; while((tm=tableRe.exec(body))) meta[tm[1]]={base:tm[2],equip:tm[3],seat:tm[4]};
+  const trips=[];
+  for(const block of body.split(/\nTrip : /).slice(1)){
+    const pid=block.split(/\r?\n/)[0].trim();
+    const segs=[];
+    const segRe=/^(\S+)\s+([A-Z]{3})\s+([A-Z]{3})\s+(\w+?\d{1,2}\w{3})\s+(\d{4})z\s+(\d{4})z\s+(\d+)\s*(DH)?\s+([\d:]+)\s*$/gm;
+    let s; while((s=segRe.exec(block))) segs.push({flight:s[1],dep:s[2],arr:s[3],date:s[4],std:s[5],sta:s[6],day:+s[7],dh:!!s[8],block:s[9],stdMs:segDT(s[4],s[5],year)});
+    const rpt=(block.match(/Trip Reporting Time\s*:\s*([\d-]+ [\d:]+)z/)||[])[1];
+    trips.push({pid,...(meta[pid]||{}),segs,statedReportMs:rpt?parseZ(rpt):null,
+      credit:parseFloat((block.match(/Credit Hours\s*:\s*([\d.]+)/)||[])[1]),
+      crt:parseFloat((block.match(/CRT Hours\s*:\s*([\d.]+)/)||[])[1]),
+      blockH:hm((block.match(/Block Hours\s*:\s*([\d:]+)/)||[])[1]),
+      tafb:hm((block.match(/Time Away From Base\s*:\s*([\d:]+)/)||[])[1]),
+      days:parseInt((block.match(/Time Away From Base[^()]*\((\d+)\s*days?/i)||[])[1])||null});
+  }
+  return {closeMs,trips};
+}
+function analyze(t){
+  const segs=t.segs; if(!segs.length)return{error:true};
+  const firstDH=segs[0].dh, firstOp=segs.find(s=>!s.dh)||segs[0];
+  let anchorMs,dest,basis,dhOption=null;
+  if(!firstDH){
+    anchorMs=t.statedReportMs??(firstOp.stdMs-OFFSET_MIN*6e4); dest=segs[0].dep;
+    basis=`First leg <b>${segs[0].flight}</b> operates — anchored on its report time.`;
+  }else{
+    anchorMs=firstOp.stdMs-OFFSET_MIN*6e4; dest=firstOp.dep;
+    const atlas=ATLAS.test(segs[0].flight);
+    basis=`First leg <b>${segs[0].flight}</b> is a ${atlas?'possibly Atlas-operated':'commercial'} deadhead — `+
+      (atlas?`that code can be Atlas metal, so you may be able to ride it (verify tail). Window anchored on first operating leg <b>${firstOp.flight}</b> (${firstOp.dep}).`
+              :`go from home to the first operating leg <b>${firstOp.flight}</b> (${firstOp.dep}); no need to make the deadhead.`);
+    if(atlas) dhOption={flight:segs[0].flight,origin:segs[0].dep,makeByMs:segs[0].stdMs-OFFSET_MIN*6e4,depMs:segs[0].stdMs};
+  }
+  return {dest,basis,anchorMs,latestMs:anchorMs-BUFFER_MIN*6e4,earliestMs:anchorMs-EARLY_MIN*6e4,dhOption};
+}
+
+function bonusHours(startDay,tripDays){           // cumulative OT bonus credit: +2/+4/+6 by day, capped at day 3
+  if(startDay<1)return 0;
+  const tier=[2,4,6]; let h=0;
+  for(let d=startDay; d<=Math.min(3,startDay+Math.max(1,tripDays)-1); d++) h+=tier[d-1];
+  return h;
+}
+function cost(t,rate,pd,bonusHrs){
+  // pay = greatest of credit / block / CRT hours × rate, + per diem on TAFB, + OT bonus credit (additive)
+  bonusHrs=bonusHrs||0;
+  const cands=[['Credit',t.credit],['Block',t.blockH],['CRT',t.crt]].filter(c=>c[1]>0);
+  if(!cands.length)return{driver:'—',hrs:0,flying:0,pd:0,bonus:0,gross:0,all:[]};
+  cands.sort((a,b)=>b[1]-a[1]); const [driver,hrs]=cands[0];
+  const flying=hrs*rate, perdiem=(t.tafb||0)*pd, bonus=bonusHrs*rate;
+  return {driver,hrs,flying,pd:perdiem,bonus,bonusHrs,gross:flying+perdiem+bonus,all:cands};
+}
+/* ============ formatting ============ */
+const fz=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}z`;};
+const fzShort=ms=>{const d=new Date(ms);return `${DOW[d.getUTCDay()]} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}z`;};
+const dateStr=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())}`;};
+const p=n=>String(n).padStart(2,'0');
+const dur=mins=>{const s=mins<0?'-':'';mins=Math.abs(mins);return `${s}${Math.floor(mins/60)}h${p(mins%60)}`;};
+const gflights=(gw,dest,date)=>`https://www.google.com/travel/flights?q=`+encodeURIComponent(`Flights to ${dest} from ${gw} on ${date}`);
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+function countUp(el,target,dur=750){
+  if(!el)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=money(target);return;}
+  const t0=performance.now();
+  const step=now=>{const k=Math.min(1,(now-t0)/dur);const e=1-Math.pow(1-k,3);el.textContent=money(target*e);if(k<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+
+/* ============ render ============ */
+function render(parsed){
+  const out=document.getElementById('out'); out.innerHTML='';
+  if(!parsed||!parsed.trips.length){
+    out.innerHTML=`<div class="empty">No trips found in that text.<br>Make sure you pasted the part that lists <b>Trip :</b> and <b>Trip Reporting Time</b>.</div>`; return;}
+  const now=Date.now(), rate=PAY_747_FO[CFG.yos];
+  if(OCR_USED){const w=document.createElement('div');w.className='ocrwarn';
+    w.innerHTML='<b>OCR mode</b> — this came from a scanned image, not clean text. Read errors are possible; verify the <b>report time</b> and base against the original before bidding.';
+    out.appendChild(w);}
+  const head=document.createElement('div'); head.className='summary';
+  head.innerHTML=`${parsed.trips.length} trip${parsed.trips.length>1?'s':''} parsed`+
+    (parsed.closeMs?` · bidding closes ${fz(parsed.closeMs)}`:'')+` · pay @ YOS ${CFG.yos} ($${rate}/hr)`;
+  out.appendChild(head);
+
+  parsed.trips.forEach((t,idx)=>{
+    const a=analyze(t); if(a.error)return;
+    const isMine=(t.seat===CFG.seat);
+    // verdict
+    let cls,v,vs;
+    if(now>=a.anchorMs){cls='nogo';v='NO-GO';vs='report time passed';}
+    else if(now>=a.latestMs){cls='cau';v='CAUTION';vs='3-hr window closed';}
+    else {cls='go';v='GO';vs='window open';}
+    const tripDays = t.days || Math.max(1, Math.ceil((t.tafb||24)/24));
+    let startDay = 1;
+    const computeC = sd => cost(t,rate,CFG.perDiem,bonusHours(sd,tripDays));
+    let C = computeC(startDay); let gross = C.gross;
+
+    const card=document.createElement('div');
+    card.className='card'+(isMine?'':' dim');
+    card.style.animationDelay=(idx*70)+'ms';
+    const routeStr=t.segs.map(s=>s.dep).concat(t.segs[t.segs.length-1].arr).join('–');
+
+    card.innerHTML=`
+      <div class="ctop">
+        <div class="lamp ${cls}">
+          <div class="dot ${cls}"></div>
+          <div class="v ${cls}">${v}</div>
+          <div class="vs">${vs}</div>
+        </div>
+        <div class="chead">
+          <div class="pid">${t.pid}</div>
+          <div class="route">${routeStr}</div>
+          <div class="tags">
+            <span class="tag ${t.seat==='FO'?'fo':'ca'}">${t.seat}${isMine?'':' · not your seat'}</span>
+            <span class="tag">${t.equip}</span>
+            <span class="tag">${C.driver} ${(+C.hrs).toFixed(2)}h</span>
+            <span class="tag pay js-pay">${money(gross)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cbody">
+        <div class="basis">${a.basis}</div>
+        <div class="win">
+          <div><div class="k">Earliest land</div><div class="t">${fzShort(a.earliestMs)}<br><small>${dateStr(a.earliestMs)}</small></div></div>
+          <div class="rep"><div class="k">Report (anchor)</div><div class="t">${fzShort(a.anchorMs)}<br><small>${dateStr(a.anchorMs)}</small></div></div>
+          <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.latestMs)}<br><small>${dateStr(a.latestMs)}</small></div></div>
+        </div>
+
+        <div class="sech">Commute to ${a.dest} — flights must land by ${fzShort(a.latestMs)}</div>
+        ${CFG.gateways.map(g=>{
+          const d1=dateStr(a.latestMs), d0=dateStr(a.earliestMs);
+          const links=`<a class="search" href="${gflights(g.code,a.dest,d1)}" target="_blank" rel="noopener">${g.code}→${a.dest} ▸</a>`;
+          const dayBefore=(d0!==d1)?` <a href="${gflights(g.code,a.dest,d0)}" target="_blank" rel="noopener" style="font-size:10px">+day before</a>`:'';
+          return `<div class="gw"><div class="code">${g.code}</div><div class="drive">drive <b>~${dur(g.drive)}</b> from home${dayBefore}</div>${links}</div>`;
+        }).join('')}
+
+        ${a.dhOption?`<div class="dho">Alt: ride the company deadhead <b>${a.dhOption.flight}</b> from <b>${a.dhOption.origin}</b> — be in position by <b>${fzShort(a.dhOption.makeByMs)}</b> (${dateStr(a.dhOption.makeByMs)}). Commute to ${a.dhOption.origin} instead.</div>`:''}
+
+        <div class="sech">What it pays — greater-of + OT bonus</div>
+        <div class="otrow">
+          <span>OT bonus ramp starts on</span>
+          <select class="js-startday">
+            <option value="1">Day 1 (+2 first)</option>
+            <option value="2">Day 2 (+4 first)</option>
+            <option value="3">Day 3 (+6 first)</option>
+            <option value="0">None</option>
+          </select>
+          <span class="otsub">trip ≈ ${tripDays} day${tripDays>1?'s':''}</span>
+        </div>
+        <div class="costline js-costline"></div>
+
+        <div class="eval" data-idx="${idx}">
+          <div class="sech" style="margin-bottom:9px">Check a flight you found → pay vs ticket</div>
+          <div class="row3">
+            <div class="field" style="gap:4px">
+              <label>Flight arrival (Zulu)</label>
+              <div style="display:flex;gap:6px">
+                <select class="ev-date" style="flex:1.3"></select>
+                <input class="ev-time" inputmode="numeric" placeholder="HHMM" maxlength="4" style="flex:1;text-align:center">
+              </div>
+            </div>
+            <div class="field" style="gap:4px">
+              <label>Ticket $ (you pay)</label>
+              <input class="ev-price" inputmode="decimal" placeholder="0">
+            </div>
+          </div>
+          <div class="verdict-eval" style="display:none"></div>
+        </div>
+      </div>`;
+    out.appendChild(card);
+
+    // wire up evaluator
+    const ev=card.querySelector('.eval');
+    const dsel=ev.querySelector('.ev-date');
+    // date options: earliest date .. report date
+    const opts=[]; let cur=new Date(a.earliestMs); cur.setUTCHours(0,0,0,0);
+    const end=new Date(a.anchorMs); end.setUTCHours(0,0,0,0);
+    while(cur<=end){opts.push(dateStr(cur.getTime()));cur.setUTCDate(cur.getUTCDate()+1);}
+    dsel.innerHTML=opts.map(o=>`<option value="${o}"${o===dateStr(a.latestMs)?' selected':''}>${o}</option>`).join('');
+    const recompute=()=>{
+      const tv=ev.querySelector('.ev-time').value.trim();
+      const pv=parseFloat(ev.querySelector('.ev-price').value);
+      const box=ev.querySelector('.verdict-eval');
+      if(!/^\d{3,4}$/.test(tv)){box.style.display='none';return;}
+      const hhmm=tv.padStart(4,'0');
+      const dparts=dsel.value.split('-');
+      const arrMs=Date.UTC(+dparts[0],+dparts[1]-1,+dparts[2],+hhmm.slice(0,2),+hhmm.slice(2,4));
+      const beforeRep=(a.anchorMs-arrMs)/6e4; // minutes before report
+      let ec,etitle,enote;
+      if(arrMs<=a.latestMs){ec='go';etitle='COMPLIANT ✓';enote=`Lands ${dur(beforeRep)} before report (≥3h). Meets the MOU.`;}
+      else if(arrMs<a.anchorMs){ec='cau';etitle='UNDER 3-HR — judgment call';enote=`Lands only ${dur(beforeRep)} before report. Breaks the 3-hr buffer but physically makes it. Each failed commute is judged individually.`;}
+      else {ec='nogo';etitle='TOO LATE ✕';enote=`Arrives at/after report (${dur(-beforeRep)} late). Cannot make it.`;}
+      let net='';
+      if(!isNaN(pv)){const n=gross-pv;net=`<div style="margin-top:7px">Trip ${money(gross)} − ticket ${money(pv)} = <span class="net">${money(n)} net</span></div>`;}
+      box.style.display='block';
+      box.style.borderColor= ec==='go'?'#1f3a2a':ec==='cau'?'#3c3420':'#3a2020';
+      box.innerHTML=`<div class="big ${ec}">${etitle}</div><div style="color:var(--muted);margin-top:3px">${enote}</div>${net}`;
+    };
+    ev.querySelectorAll('.ev-time,.ev-price,.ev-date').forEach(el=>el.addEventListener('input',recompute));
+
+    // OT bonus: render cost line + react to start-day dropdown
+    const startSel=card.querySelector('.js-startday');
+    const renderCost=()=>{
+      startDay=+startSel.value;
+      C=computeC(startDay); gross=C.gross;
+      const tier=[2,4,6], tiers=[];
+      for(let d=startDay; d>=1 && d<=Math.min(3,startDay+Math.max(1,tripDays)-1); d++) tiers.push('+'+tier[d-1]);
+      const bonusTxt = C.bonusHrs>0 ? ` + OT bonus ${tiers.join('')} = ${C.bonusHrs}h × $${rate} = ${money(C.bonus)}` : '';
+      card.querySelector('.js-costline').innerHTML =
+        `Pays on <b>${C.driver} ${(+C.hrs).toFixed(2)}h</b> × $${rate} = <b>${money(C.flying)}</b>`
+        + (t.tafb?` + per diem ${t.tafb.toFixed(1)}h × $${CFG.perDiem.toFixed(2)} = ${money(C.pd)}`:'')
+        + bonusTxt
+        + ` → <span class="net">${money(C.gross)} gross</span>`
+        + `<div class="drivers">credit ${(+t.credit||0).toFixed(2)} · block ${(+t.blockH||0).toFixed(2)} · CRT ${(+t.crt||0).toFixed(2)} &nbsp;(highest wins)</div>`;
+      card.querySelector('.js-pay').textContent = money(gross);
+      recompute();
+    };
+    startSel.value=String(startDay);
+    startSel.addEventListener('change',renderCost);
+    renderCost();
+    countUp(card.querySelector('.js-pay'), gross, 800);
+  });
+}
+
+/* ============ inputs / wiring ============ */
+let LAST_RAWS=null;
+let OCR_USED=false;
+(function(){  // swallow only the harmless "fake worker" notice; let every other warning through
+  const ow=console.warn;
+  console.warn=function(){const m=arguments[0];if(typeof m==='string'&&/fake worker/i.test(m))return;return ow.apply(console,arguments);};
+})();
+(function(){                                  // load pdf.js worker same-origin to dodge sandbox cross-origin block
+  if(!window.pdfjsLib) return;
+  const WURL='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  try{
+    const blob=new Blob(["importScripts('"+WURL+"');"],{type:'application/javascript'});
+    pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(blob);
+  }catch(e){ pdfjsLib.GlobalWorkerOptions.workerSrc=WURL; }   // fall back; worst case main-thread still works
+})();
+
+const statusEl=()=>document.getElementById('status');
+function setStatus(msg,kind){const s=statusEl();if(!msg){s.style.display='none';return;}s.style.display='block';s.className='status'+(kind?' '+kind:'');s.textContent=msg;}
+
+// fast path: pull the embedded text layer
+async function pdfTextLayer(pdf){
+  let text='';
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const c=await page.getTextContent();
+    const rows={};
+    c.items.forEach(it=>{const y=Math.round(it.transform[5]);(rows[y]=rows[y]||[]).push(it.str);});
+    text+=Object.keys(rows).map(Number).sort((a,b)=>b-a).map(y=>rows[y].join(' ')).join('\n')+'\n';
+  }
+  return text;
+}
+// does the extracted text actually look like an OT email?
+function looksParseable(t){return /Trip Reporting Time|Bidding (Open|Closing) Time|Pairing ID/i.test(t)&&t.replace(/\s/g,'').length>120;}
+
+// OCR noise cleanup (only applied to image-scanned text)
+function ocrClean(t){
+  const fix=s=>s.replace(/[Oo]/g,'0').replace(/[lI]/g,'1');
+  return t
+    .replace(/\b([0-9OolI]{4})-([0-9OolI]{2})-([0-9OolI]{2})\b/g,(m,a,b,c)=>fix(a)+'-'+fix(b)+'-'+fix(c)) // dates
+    .replace(/\b([0-9OolI]{1,2}:[0-9OolI]{2}(?::[0-9OolI]{2})?)([zZ])?\b/g,(m,tt,z)=>fix(tt)+(z?'z':'')) // colon times
+    .replace(/\b([0-9OolI]{4})([zZ])\b/g,(m,d)=>fix(d)+'z')                                              // 4-digit STD/STA
+    .replace(/[ \t]{2,}/g,' ');
+}
+
+async function pdfToText(file){
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf, verbosity:0}).promise;   // verbosity:0 = errors only (silences fake-worker warning)
+  const text=await pdfTextLayer(pdf);
+  if(looksParseable(text)){OCR_USED=false;return text;}
+  // image / scanned PDF -> OCR fallback
+  if(!window.Tesseract) throw new Error('This PDF looks scanned and the OCR engine isn\u2019t available (needs a connection on first use). Save the app and try again online, or paste the text.');
+  OCR_USED=true;
+  let out='';
+  for(let p=1;p<=pdf.numPages;p++){
+    setStatus(`Scanned PDF — reading page ${p} of ${pdf.numPages} with OCR\u2026`,'work');
+    const page=await pdf.getPage(p);
+    const vp=page.getViewport({scale:2.2});
+    const cv=document.createElement('canvas'); cv.width=vp.width; cv.height=vp.height;
+    await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
+    const {data}=await Tesseract.recognize(cv,'eng',{
+      logger:m=>{if(m.status==='recognizing text')setStatus(`OCR page ${p}/${pdf.numPages} — ${Math.round(m.progress*100)}%`,'work');}
+    });
+    out+=data.text+'\n';
+  }
+  setStatus('OCR done — double-check the report time below.','');
+  return ocrClean(out);
+}
+async function fileToText(file){
+  if(/\.pdf$/i.test(file.name)||file.type==='application/pdf'){
+    if(!window.pdfjsLib) throw new Error('PDF reader still loading — try again in a second.');
+    return pdfToText(file);
+  }
+  OCR_USED=false;
+  return file.text();
+}
+function runRaws(raws){
+  LAST_RAWS=raws;
+  try{
+    const all={closeMs:null,trips:[]};
+    raws.forEach(r=>{const pp=parseEmail(r); if(all.closeMs==null)all.closeMs=pp.closeMs; all.trips.push(...pp.trips);});
+    render(all);
+    if(!OCR_USED) setStatus(null);
+  }catch(e){document.getElementById('out').innerHTML=`<div class="empty">Couldn't parse that. ${e.message}</div>`;}
+}
+const reRender=()=>{if(LAST_RAWS)runRaws(LAST_RAWS);};
+
+document.getElementById('file').addEventListener('change',e=>{
+  const files=[...e.target.files]; if(!files.length)return;
+  Promise.all(files.map(fileToText)).then(runRaws).catch(err=>document.getElementById('out').innerHTML=`<div class="empty">${err.message}</div>`);
+});
+const drop=document.getElementById('drop');
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('drop',e=>{const fs=[...e.dataTransfer.files];if(fs.length)Promise.all(fs.map(fileToText)).then(runRaws).catch(err=>document.getElementById('out').innerHTML=`<div class="empty">${err.message}</div>`);});
+
+document.getElementById('pasteBtn').onclick=()=>{const w=document.getElementById('pasteWrap');w.style.display=w.style.display==='none'?'block':'none';};
+document.getElementById('runPaste').onclick=()=>{OCR_USED=false;setStatus(null);runRaws([document.getElementById('paste').value]);};
+document.getElementById('sampleBtn').onclick=()=>{OCR_USED=false;setStatus(null);runRaws(Object.values(SAMPLES));};
+document.getElementById('clearBtn').onclick=()=>{document.getElementById('out').innerHTML='';document.getElementById('paste').value='';LAST_RAWS=null;};
+
+/* config UI */
+const yos=document.getElementById('yos');
+yos.innerHTML=Object.keys(PAY_747_FO).map(y=>`<option value="${y}"${+y===CFG.yos?' selected':''}>Year ${y} — $${PAY_747_FO[y]}/hr</option>`).join('');
+yos.onchange=()=>{CFG.yos=+yos.value; reRender();};
+const pdInput=document.getElementById('perdiem');
+pdInput.addEventListener('input',()=>{CFG.perDiem=+pdInput.value||0; reRender();});
+const gwCfg=document.getElementById('gwCfg');
+gwCfg.innerHTML=CFG.gateways.map((g,i)=>`<div class="field"><label>${g.code}</label><input type="number" data-i="${i}" value="${g.drive}"></div>`).join('');
+gwCfg.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{CFG.gateways[+e.target.dataset.i].drive=+e.target.value||0; reRender();}));
+
+/* live zulu clock */
+function tick(){const d=new Date();document.getElementById('zclock').innerHTML=`<small>Z</small> ${DOW[d.getUTCDay()]} ${p(d.getUTCHours())}${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`;}
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>
