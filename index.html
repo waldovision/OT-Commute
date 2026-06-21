@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMGExMDI0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA0OThmIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9InVybCgjYikiLz48Y2lyY2xlIGN4PSIzMSIgY3k9IjM0IiByPSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjIuMiIgb3BhY2l0eT0iLjU1Ii8+PGVsbGlwc2UgY3g9IjMxIiBjeT0iMzQiIHJ4PSI2LjUiIHJ5PSIxNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2E4ZWUwIiBzdHJva2Utd2lkdGg9IjEuNiIgb3BhY2l0eT0iLjUiLz48bGluZSB4MT0iMTYiIHkxPSIzNCIgeDI9IjQ2IiB5Mj0iMzQiIHN0cm9rZT0iIzNhOGVlMCIgc3Ryb2tlLXdpZHRoPSIxLjYiIG9wYWNpdHk9Ii41Ii8+PHBhdGggZD0iTTE0IDQ4IEw1MiAxNCBMNDAgNDcgTDM2IDM3IFoiIGZpbGw9IiNmZmJlMjAiLz48cGF0aCBkPSJNMTQgNDggTDM2IDM3IEwyNCA1MCBaIiBmaWxsPSIjZGViNDQ3Ii8+PC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js"></script>
 <style>
@@ -22,7 +22,7 @@
     --txt:#eaf0ff; --muted:#9fb0d4; --dim:#647aa3;
     --accent:var(--tblue-lite); --link:#74b6ff;
     --go:#27d588; --cau:#ffce4a; --nogo:#ff5663;
-    --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'IBM Plex Sans',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace; --sans:'Inter','Helvetica Neue',Arial,system-ui,sans-serif; --display:'Poppins','Inter',system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0}
@@ -53,10 +53,10 @@
     background-size:200% 100%;animation:sheen 6s linear infinite;opacity:.9}
   @keyframes sheen{0%{background-position:200% 0}100%{background-position:-200% 0}}
   .hrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .brand{font-family:var(--mono);font-weight:700;letter-spacing:.08em;font-size:15px;color:#fff;text-shadow:0 0 18px rgba(0,0,0,.4)}
+  .brand{font-family:var(--sans);font-weight:700;letter-spacing:.08em;font-size:15px;color:#fff;text-shadow:0 0 18px rgba(0,0,0,.4)}
   .brand b{color:var(--tyellow);text-shadow:0 0 14px rgba(255,190,32,.6)}
-  .sub{font-family:var(--mono);font-size:10px;color:rgba(234,240,255,.72);letter-spacing:.14em;text-transform:uppercase;margin-top:3px}
-  .zclock{font-family:var(--mono);font-size:13px;color:#bff7da;letter-spacing:.06em;font-variant-numeric:tabular-nums;
+  .sub{font-family:var(--sans);font-size:10px;color:rgba(234,240,255,.72);letter-spacing:.14em;text-transform:uppercase;margin-top:3px}
+  .zclock{font-family:var(--sans);font-size:13px;color:#bff7da;letter-spacing:.06em;font-variant-numeric:tabular-nums;
     border:1px solid rgba(39,213,136,.4);border-radius:8px;padding:6px 10px;white-space:nowrap;
     background:rgba(39,213,136,.08);box-shadow:0 0 18px -4px rgba(39,213,136,.5),inset 0 0 12px -6px rgba(39,213,136,.6);
     display:flex;flex-direction:column;align-items:flex-end;gap:1px;line-height:1.25}
@@ -64,7 +64,7 @@
   .zclock small{color:#6fe6ad;margin-right:2px}
 
   .bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
-  .btn{font-family:var(--mono);font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s border-color;
+  .btn{font-family:var(--sans);font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s border-color;
     background:var(--panel);color:var(--txt);border:1px solid var(--line2);border-radius:9px;padding:10px 13px;
     backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
   .btn:hover{border-color:var(--tblue-lite);transform:translateY(-1px);box-shadow:0 8px 22px -10px rgba(58,142,224,.7)}
@@ -76,44 +76,44 @@
 
   details.cfg{border:1px solid var(--line);border-radius:12px;background:var(--glass);margin:10px 0;
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-  details.cfg>summary{list-style:none;cursor:pointer;padding:12px 14px;font-family:var(--mono);
+  details.cfg>summary{list-style:none;cursor:pointer;padding:12px 14px;font-family:var(--sans);
     font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;display:flex;justify-content:space-between}
   details.cfg>summary::-webkit-details-marker{display:none}
   details.cfg[open]>summary{color:var(--tyellow)}
   .cfgbody{padding:4px 14px 16px;display:grid;gap:14px}
   .field{display:flex;flex-direction:column;gap:5px}
-  .field label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-  select,input[type=number],input[type=text]{font-family:var(--mono);font-size:13px;background:rgba(8,13,28,.7);
+  .field label{font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  select,input[type=number],input[type=text]{font-family:var(--sans);font-size:13px;background:rgba(8,13,28,.7);
     color:var(--txt);border:1px solid var(--line2);border-radius:8px;padding:9px 10px;width:100%;transition:.15s box-shadow,.15s border-color}
   select:focus,input:focus{outline:none;border-color:var(--tyellow);box-shadow:0 0 0 3px rgba(255,190,32,.25)}
   option{background:#0a1024}
   .gw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px}
   .gw-grid .field input{text-align:right}
 
-  textarea{width:100%;min-height:120px;font-family:var(--mono);font-size:12px;background:rgba(8,13,28,.7);
+  textarea{width:100%;min-height:120px;font-family:var(--sans);font-size:12px;background:rgba(8,13,28,.7);
     color:var(--txt);border:1px dashed var(--line2);border-radius:10px;padding:11px;resize:vertical}
   textarea:focus{outline:none;border-color:var(--tyellow);box-shadow:0 0 0 3px rgba(255,190,32,.2)}
   .drop{border:1.5px dashed var(--line2);border-radius:12px;padding:16px;text-align:center;color:var(--muted);
-    font-family:var(--mono);font-size:12px;margin-top:8px;transition:.18s;background:var(--panel2)}
+    font-family:var(--sans);font-size:12px;margin-top:8px;transition:.18s;background:var(--panel2)}
   .drop.over{border-color:var(--tyellow);color:var(--tyellow);background:rgba(255,190,32,.07);box-shadow:0 0 26px -6px rgba(255,190,32,.5)}
 
-  .summary{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:18px 0 8px;letter-spacing:.04em}
+  .summary{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin:18px 0 8px;letter-spacing:.04em}
   .countdown{color:var(--go);font-weight:600}
   .countdown.cd-past{color:var(--nogo)}
   .controls{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:6px 0 2px}
-  .chip{font-family:var(--mono);font-size:11px;letter-spacing:.03em;cursor:pointer;color:var(--muted);
+  .chip{font-family:var(--sans);font-size:11px;letter-spacing:.03em;cursor:pointer;color:var(--muted);
     background:var(--panel);border:1px solid var(--line2);border-radius:20px;padding:6px 11px;transition:.15s}
   .chip:hover{border-color:var(--tblue-lite);color:var(--txt)}
   .chip.on{background:linear-gradient(135deg,var(--tyellow),var(--gold));color:#241a00;border-color:transparent;font-weight:700}
-  .cnote{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-left:auto}
+  .cnote{font-family:var(--sans);font-size:10.5px;color:var(--dim);margin-left:auto}
   .js-copy{margin-top:2px}
   .manual{border:1px solid var(--line2);border-radius:12px;padding:12px;background:var(--glass);display:grid;gap:11px}
-  .manual .msec{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.5}
+  .manual .msec{font-family:var(--sans);font-size:11px;color:var(--muted);line-height:1.5}
   .mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px}
   .flights{margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
   .fhdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;flex-wrap:wrap}
   .f-auto{padding:7px 13px;font-size:12px;white-space:nowrap}
-  .f-status{font-family:var(--mono);font-size:11px;margin:0 0 9px;padding:8px 10px;border-radius:8px;line-height:1.5;
+  .f-status{font-family:var(--sans);font-size:11px;margin:0 0 9px;padding:8px 10px;border-radius:8px;line-height:1.5;
     border:1px solid var(--line2);background:rgba(0,0,0,.22);color:var(--muted)}
   .f-status.ok{border-color:rgba(39,213,136,.4);background:rgba(39,213,136,.08);color:#bff7da}
   .f-status.err{border-color:rgba(245,179,66,.4);background:rgba(245,179,66,.08);color:#ffe1ac}
@@ -124,59 +124,59 @@
   .flist{display:grid;gap:9px;margin-top:11px}
   .fstrip{border:1px solid var(--line2);border-left-width:3px;border-radius:11px;padding:10px 12px;background:var(--panel)}
   .fstrip.go{border-left-color:var(--go)} .fstrip.cau{border-left-color:var(--cau)} .fstrip.nogo{border-left-color:var(--nogo)}
-  .fhd{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px}
+  .fhd{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:13px}
   .flogo{width:22px;height:22px;border-radius:5px;object-fit:contain;background:#fff;padding:1px}
   .flogo-w{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 22px;vertical-align:middle}
-  .flogo-mono{display:none;width:22px;height:22px;border-radius:5px;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;font-weight:700;color:#fff;letter-spacing:.3px;line-height:1}
+  .flogo-mono{display:none;width:22px;height:22px;border-radius:5px;align-items:center;justify-content:center;font-family:var(--sans);font-size:8px;font-weight:700;color:#fff;letter-spacing:.3px;line-height:1}
   .flogo-w.noimg .flogo-mono{display:inline-flex}
-  .fprice-row{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .fprice-row{font-family:var(--sans);font-size:11px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
   .fprice-row .cur{color:var(--dim);margin-right:-3px}
-  .fprice{width:60px;padding:3px 6px;font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:6px;color:var(--txt);text-align:right}
+  .fprice{width:60px;padding:3px 6px;font-family:var(--sans);font-size:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:6px;color:var(--txt);text-align:right}
   .fprice:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.08)}
   .esttag{font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:#ffce4a;border:1px solid rgba(255,206,74,.4);border-radius:4px;padding:1px 5px}
-  .fpill{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:20px;font-weight:700}
+  .fpill{font-family:var(--sans);font-size:9.5px;letter-spacing:.08em;padding:3px 7px;border-radius:20px;font-weight:700}
   .fpill.go{background:rgba(39,213,136,.16);color:var(--go)} .fpill.cau{background:rgba(245,179,66,.16);color:var(--cau)} .fpill.nogo{background:rgba(255,90,90,.16);color:var(--nogo)}
   .fpill.nonstop{background:rgba(39,213,136,.9);color:#04130b;font-weight:800}
   .fpill.stop{background:var(--line2);color:var(--muted)}
   .fbanner{border:1px solid rgba(39,213,136,.55);border-radius:12px;padding:12px 13px;margin-bottom:11px;
     background:linear-gradient(135deg,rgba(39,213,136,.16),rgba(39,213,136,.05));box-shadow:0 0 26px -8px rgba(39,213,136,.55)}
-  .fbk{font-family:var(--mono);font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--go);text-transform:uppercase}
+  .fbk{font-family:var(--sans);font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--go);text-transform:uppercase}
   .lsafe{margin:8px 0;padding:9px 11px;border-radius:9px;border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09)}
   .lsafe.solo{border-color:rgba(255,206,74,.5);background:rgba(255,206,74,.1)}
-  .lsk{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;font-weight:800;color:var(--tblue-lite);text-transform:uppercase}
+  .lsk{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;font-weight:800;color:var(--tblue-lite);text-transform:uppercase}
   .lsafe.solo .lsk{color:var(--cau)}
-  .lsv{font-family:var(--mono);font-size:11.5px;color:var(--txt);margin-top:5px}
-  .lsn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px;line-height:1.5}
+  .lsv{font-family:var(--sans);font-size:11.5px;color:var(--txt);margin-top:5px}
+  .lsn{font-family:var(--sans);font-size:10px;color:var(--dim);margin-top:4px;line-height:1.5}
   .lsbadge{background:var(--tblue-lite)!important;color:#04223f!important}
   .wxbox{display:flex;flex-direction:column;gap:5px;margin-top:4px}
-  .wxs{font-family:var(--mono);font-size:10.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .wxs{font-family:var(--sans);font-size:10.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .wxs b{color:var(--txt)}
   .wxdot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
   .wxdot.go{background:var(--go)} .wxdot.cau{background:var(--cau)} .wxdot.nogo{background:var(--nogo)}
   .wxl{font-weight:700;font-size:9.5px;letter-spacing:.08em}
   .wxl.go{color:var(--go)} .wxl.cau{color:var(--cau)} .wxl.nogo{color:var(--nogo)}
   .wxf{color:var(--dim)}
-  .fbv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:#dffaed;margin-top:7px}
-  .fbn{font-family:var(--mono);font-size:10.5px;color:#8fcfb1;margin-top:6px}
+  .fbv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--sans);font-size:13px;color:#dffaed;margin-top:7px}
+  .fbn{font-family:var(--sans);font-size:10.5px;color:#8fcfb1;margin-top:6px}
   .fstrip.pin{border-color:rgba(39,213,136,.5);box-shadow:0 0 18px -10px rgba(39,213,136,.6)}
-  .fbest{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:#241a00;background:linear-gradient(135deg,var(--tyellow),var(--gold));padding:3px 8px;border-radius:20px;font-weight:700}
+  .fbest{font-family:var(--sans);font-size:9.5px;letter-spacing:.05em;color:#241a00;background:linear-gradient(135deg,var(--tyellow),var(--gold));padding:3px 8px;border-radius:20px;font-weight:700}
   .frm{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;padding:2px 4px}
   .frm:hover{color:var(--nogo)}
-  .frt{font-family:var(--mono);font-size:11.5px;color:var(--txt);margin-top:7px;letter-spacing:.03em}
-  .ftimes{display:flex;flex-wrap:wrap;gap:4px 18px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:4px}
+  .frt{font-family:var(--sans);font-size:11.5px;color:var(--txt);margin-top:7px;letter-spacing:.03em}
+  .ftimes{display:flex;flex-wrap:wrap;gap:4px 18px;font-family:var(--sans);font-size:11px;color:var(--muted);margin-top:4px}
   .ftimes b{color:#bff7da}
-  .fnote{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-top:6px;line-height:1.5}
-  .fconn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:7px;padding:7px 9px;border-left:2px solid var(--gold);background:rgba(222,180,71,.06);border-radius:4px;display:flex;flex-direction:column;gap:3px}
+  .fnote{font-family:var(--sans);font-size:10.5px;color:var(--dim);margin-top:6px;line-height:1.5}
+  .fconn{font-family:var(--sans);font-size:10px;color:var(--dim);margin-top:7px;padding:7px 9px;border-left:2px solid var(--gold);background:rgba(222,180,71,.06);border-radius:4px;display:flex;flex-direction:column;gap:3px}
   .fconn .flay{color:var(--tyellow)}
   .fconn .fcav{color:#c98a2b;font-style:italic;margin-top:2px}
   .fconn.tight{border-left-color:#e0683a;background:rgba(224,104,58,.08)}
   .fconn .flay.warn{color:#e0683a;font-weight:600}
   .fpill.warn{background:rgba(224,104,58,.16);color:#e0683a;border:1px solid rgba(224,104,58,.4)}
-  .status{font-family:var(--mono);font-size:11.5px;margin-top:9px;padding:10px 12px;border-radius:9px;line-height:1.5;
+  .status{font-family:var(--sans);font-size:11.5px;margin-top:9px;padding:10px 12px;border-radius:9px;line-height:1.5;
     border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09);color:#bcd8ff}
   .status.work{border-color:rgba(255,206,74,.45);background:rgba(255,206,74,.09);color:var(--cau)}
   .status.err{border-color:rgba(255,86,99,.45);background:rgba(255,86,99,.09);color:#ff929a}
-  .ocrwarn{font-family:var(--mono);font-size:11px;margin:0 0 4px;padding:9px 11px;border-radius:9px;line-height:1.5;
+  .ocrwarn{font-family:var(--sans);font-size:11px;margin:0 0 4px;padding:9px 11px;border-radius:9px;line-height:1.5;
     border:1px solid rgba(255,206,74,.5);background:rgba(255,206,74,.1);color:var(--cau)}
   .ocrwarn b{color:#ffd968}
 
@@ -193,14 +193,14 @@
   .lamp .dot{width:13px;height:13px;border-radius:50%;background:currentColor;box-shadow:0 0 14px 2px currentColor;z-index:1}
   .lamp.go .dot{animation:pulse 1.9s ease-in-out infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 9px 1px currentColor;transform:scale(1)}50%{box-shadow:0 0 22px 6px currentColor;transform:scale(1.16)}}
-  .lamp .v{font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.06em;color:currentColor;text-shadow:0 0 16px currentColor;z-index:1}
-  .lamp .vs{font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-align:center;text-transform:uppercase;z-index:1}
+  .lamp .v{font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.06em;color:currentColor;text-shadow:0 0 16px currentColor;z-index:1}
+  .lamp .vs{font-family:var(--sans);font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-align:center;text-transform:uppercase;z-index:1}
   .go{color:var(--go)} .cau{color:var(--cau)} .nogo{color:var(--nogo)} .wait{color:#5f6f86}
   .chead{flex:1;padding:12px 14px;min-width:0}
-  .chead .pid{font-family:var(--mono);font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff}
-  .chead .route{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
+  .chead .pid{font-family:var(--sans);font-weight:700;font-size:17px;letter-spacing:.04em;color:#fff}
+  .chead .route{font-family:var(--sans);font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis}
   .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:3px 7px;border-radius:6px;
+  .tag{font-family:var(--sans);font-size:10px;letter-spacing:.06em;padding:3px 7px;border-radius:6px;
     border:1px solid var(--line2);color:var(--muted);background:rgba(255,255,255,.03)}
   .tag.fo{color:#9fd0ff;border-color:rgba(58,142,224,.5);background:rgba(58,142,224,.1)}
   .tag.ca{color:var(--cau);border-color:rgba(255,206,74,.4);background:rgba(255,206,74,.08)}
@@ -209,45 +209,45 @@
   @keyframes payShimmer{0%{background-position:0 0}100%{background-position:200% 0}}
 
   .cbody{padding:0 14px 14px;display:grid;gap:13px}
-  .basis{font-family:var(--mono);font-size:11.5px;color:var(--muted);border-left:2px solid var(--tblue-lite);
+  .basis{font-family:var(--sans);font-size:11.5px;color:var(--muted);border-left:2px solid var(--tblue-lite);
     padding-left:10px;line-height:1.5}
   .basis b{color:var(--txt)}
 
   .win{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);
     border:1px solid var(--line);border-radius:10px;overflow:hidden}
   .win div{background:rgba(10,16,36,.6);padding:10px 9px}
-  .win .k{font-family:var(--mono);font-size:9px;letter-spacing:.09em;color:var(--dim);text-transform:uppercase}
-  .win .t{font-family:var(--mono);font-size:13px;margin-top:3px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .win .k{font-family:var(--sans);font-size:9px;letter-spacing:.09em;color:var(--dim);text-transform:uppercase}
+  .win .t{font-family:var(--sans);font-size:13px;margin-top:3px;letter-spacing:.02em;font-variant-numeric:tabular-nums}
   .win .t small{color:var(--muted);font-size:10px}
   .win .hard{background:rgba(255,86,99,.08)}
   .win .hard .t{color:#ff929a;font-weight:700;text-shadow:0 0 12px rgba(255,86,99,.45)}
 
-  .sech{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tblue-lite);margin-bottom:-3px}
+  .sech{font-family:var(--sans);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tblue-lite);margin-bottom:-3px}
 
   .gw{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);transition:.16s}
   .gw:hover{border-color:var(--tblue-lite);background:rgba(58,142,224,.09);transform:translateX(2px)}
-  .gw .code{font-family:var(--mono);font-weight:700;font-size:14px;width:42px;color:#cfe2ff}
-  .gw .drive{font-family:var(--mono);font-size:11px;color:var(--muted);flex:1}
+  .gw .code{font-family:var(--sans);font-weight:700;font-size:14px;width:42px;color:#cfe2ff}
+  .gw .drive{font-family:var(--sans);font-size:11px;color:var(--muted);flex:1}
   .gw .drive b{color:var(--txt);font-weight:600}
-  .gw a.search{font-family:var(--mono);font-size:11.5px;border:1px solid rgba(255,190,32,.5);color:var(--tyellow);
+  .gw a.search{font-family:var(--sans);font-size:11.5px;border:1px solid rgba(255,190,32,.5);color:var(--tyellow);
     padding:7px 11px;border-radius:8px;white-space:nowrap;transition:.15s}
   .gw a.search:hover{background:var(--tyellow);color:#241a00;box-shadow:0 0 18px -4px rgba(255,190,32,.7)}
 
   .dho{border:1px solid rgba(255,206,74,.35);background:rgba(255,206,74,.07);border-radius:10px;padding:11px 12px;
-    font-family:var(--mono);font-size:11.5px;color:var(--cau);line-height:1.5}
+    font-family:var(--sans);font-size:11.5px;color:var(--cau);line-height:1.5}
   .dho b{color:#ffd968}
-  .costline{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.65}
+  .costline{font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.65}
   .costline b{color:var(--txt);font-weight:600}
   .costline .drivers{color:var(--dim);font-size:10.5px;margin-top:3px}
-  .otrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:-2px}
+  .otrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--sans);font-size:11px;color:var(--muted);margin-bottom:-2px}
   .otrow select{width:auto;padding:6px 8px;font-size:11.5px}
   .otrow .otsub{color:var(--dim)}
 
-  .net{font-family:var(--mono);font-size:15px;color:#7ef0b6;font-weight:700;text-shadow:0 0 14px rgba(39,213,136,.4);font-variant-numeric:tabular-nums}
+  .net{font-family:var(--sans);font-size:15px;color:#7ef0b6;font-weight:700;text-shadow:0 0 14px rgba(39,213,136,.4);font-variant-numeric:tabular-nums}
 
   .empty{border:1px dashed var(--line2);border-radius:14px;padding:36px 16px;text-align:center;
-    color:var(--muted);font-family:var(--mono);font-size:12.5px;margin-top:16px;line-height:1.7;background:var(--panel2)}
-  .foot{font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.6;margin:28px 0 8px;
+    color:var(--muted);font-family:var(--sans);font-size:12.5px;margin-top:16px;line-height:1.7;background:var(--panel2)}
+  .foot{font-family:var(--sans);font-size:10.5px;color:var(--dim);line-height:1.6;margin:28px 0 8px;
     border-top:1px solid var(--line);padding-top:14px}
   .foot b{color:var(--muted)}
   @media (max-width:480px){
@@ -259,6 +259,10 @@
     *{animation:none !important;transition:none !important}
     .card{opacity:1;transform:none}
   }
+  /* Atlas-brand typography: Poppins(display)≈Geogrotesque, Inter(body)≈Univers/Arial */
+  body{font-variant-numeric:tabular-nums}
+  .brand,.sub,.btn,.field label,.win .k,.k,.sech,.summary,.fpill,.fbk,.lsk,.fbest,.lamp .v,.chip,details.cfg>summary{font-family:var(--display)}
+  .zclock,.ftimes,.fprice,.fprice-row{font-family:var(--mono)}
 </style>
 </head>
 <body>
@@ -301,9 +305,9 @@
       <div class="field">
         <label>Auto-search backend — your Cloudflare Worker URL (optional)</label>
         <input id="worker" type="url" placeholder="https://ot-flights.you.workers.dev" autocomplete="off" spellcheck="false">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px">Leave blank to log flights by hand. With a URL set, each trip gets a 🔎 Auto-search button.</div>
+        <div style="font-family:var(--sans);font-size:10px;color:var(--dim);margin-top:5px">Leave blank to log flights by hand. With a URL set, each trip gets a 🔎 Auto-search button.</div>
         <div style="margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <label style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">Max stops to search</label>
+          <label style="font-family:var(--sans);font-size:10.5px;color:var(--dim)">Max stops to search</label>
           <select id="maxStops" style="width:auto;min-width:150px">
             <option value="0">Nonstop only</option>
             <option value="1">Up to 1 stop</option>
@@ -311,35 +315,35 @@
             <option value="3">Up to 3 stops</option>
           </select>
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:#c98a2b;margin-top:5px;line-height:1.5">More stops = more API calls and more misconnect risk. Connections are self-connect (separate tickets); the nonstop stays the highlighted pick.</div>
+        <div style="font-family:var(--sans);font-size:10px;color:#c98a2b;margin-top:5px;line-height:1.5">More stops = more API calls and more misconnect risk. Connections are self-connect (separate tickets); the nonstop stays the highlighted pick.</div>
         <div style="margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <label style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">Connection time (min)</label>
+          <label style="font-family:var(--sans);font-size:10.5px;color:var(--dim)">Connection time (min)</label>
           <input id="minConn" type="number" min="20" max="240" step="5" style="width:78px" title="shortest connection allowed">
-          <span style="font-family:var(--mono);font-size:10.5px;color:var(--dim)">to</span>
+          <span style="font-family:var(--sans);font-size:10.5px;color:var(--dim)">to</span>
           <input id="maxConn" type="number" min="60" max="720" step="15" style="width:78px" title="longest connection shown">
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">Self-connect floor — 60 min is a safe carry-on minimum for a pilot (KCM). Anything under 60 is flagged ⚠ TIGHT. International hubs (customs) realistically need 2–3h.</div>
-        <label style="margin-top:9px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--dim);cursor:pointer">
+        <div style="font-family:var(--sans);font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">Self-connect floor — 60 min is a safe carry-on minimum for a pilot (KCM). Anything under 60 is flagged ⚠ TIGHT. International hubs (customs) realistically need 2–3h.</div>
+        <label style="margin-top:9px;display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:10.5px;color:var(--dim);cursor:pointer">
           <input id="autoCheck" type="checkbox" style="width:auto"> Auto-check flights when a trip loads (drives the stoplight — uses quota)
         </label>
-        <label style="margin-top:7px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--dim);cursor:pointer">
+        <label style="margin-top:7px;display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:10.5px;color:var(--dim);cursor:pointer">
           <input id="livePrices" type="checkbox" style="width:auto"> Fetch live ticket prices with Auto-search (free SerpApi key in your Worker)
         </label>
       </div>
       <div>
-        <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
+        <label style="font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
         <div id="gwCfg" style="margin-top:7px;display:grid;gap:7px"></div>
         <button class="btn ghost" id="addGw" style="margin-top:8px;font-size:11px;padding:7px 11px">+ add gateway</button>
       </div>
       <div>
-        <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Typical fares — same-day one-way walk-up ($) per route</label>
+        <label style="font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Typical fares — same-day one-way walk-up ($) per route</label>
         <div id="fareCfg" style="margin-top:7px;display:grid;gap:7px"></div>
         <button class="btn ghost" id="addFare" style="margin-top:8px;font-size:11px;padding:7px 11px">+ add route fare</button>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5">Prefilled into the net math so a search shows take-home instantly. The app also learns a route automatically whenever you confirm a price on a flight.</div>
+        <div style="font-family:var(--sans);font-size:10px;color:var(--dim);margin-top:6px;line-height:1.5">Prefilled into the net math so a search shows take-home instantly. The app also learns a route automatically whenever you confirm a price on a flight.</div>
       </div>
       <div class="field">
         <label>Buffer rule</label>
-        <div style="font-family:var(--mono);font-size:11.5px;color:var(--muted)">Report = STD − offset by fleet (747/777 = 1:30, 767/737 = 1:00) · land ≥ 3:00 before report · no earlier than 24:00</div>
+        <div style="font-family:var(--sans);font-size:11.5px;color:var(--muted)">Report = STD − offset by fleet (747/777 = 1:30, 767/737 = 1:00) · land ≥ 3:00 before report · no earlier than 24:00</div>
       </div>
     </div>
   </details>
@@ -374,7 +378,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.1 · 2026-06-21 · live SerpApi prices + past-trip guard (all-departed message)</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.2 · 2026-06-21 · AM/PM local times + Atlas-style type (Poppins/Inter)</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -502,9 +506,9 @@ const zt=ms=>{const d=new Date(ms);return `${p(d.getUTCHours())}${p(d.getUTCMinu
 const dateStr=ms=>{const d=new Date(ms);return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())}`;};
 function flocal(ms){
   try{
-    const parts=new Intl.DateTimeFormat('en-US',{timeZone:CFG.tz,weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZoneName:'short'}).formatToParts(new Date(ms));
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:CFG.tz,weekday:'short',hour:'numeric',minute:'2-digit',hour12:true,timeZoneName:'short'}).formatToParts(new Date(ms));
     const g=t=>(parts.find(p=>p.type===t)||{}).value||'';
-    return `${g('weekday')} ${g('hour')}${g('minute')} ${g('timeZoneName')}`;
+    return `${g('weekday')} ${g('hour')}:${g('minute')} ${g('dayPeriod')} ${g('timeZoneName')}`;
   }catch(e){return '';}
 }
 const p=n=>String(n).padStart(2,'0');
@@ -636,7 +640,7 @@ function render(parsed){
         ${a.dhOption?`<div class="dho">Alt: ride the company deadhead <b>${a.dhOption.flight}</b> from <b>${a.dhOption.origin}</b> — be in position by <b>${fzShort(a.dhOption.makeByMs)}</b> (${flocal(a.dhOption.makeByMs)}, ${dateStr(a.dhOption.makeByMs)}). Commute to ${a.dhOption.origin} instead.</div>`:''}
 
         <div class="sech">Weather — gateways &amp; base near report</div>
-        <div class="wxbox" data-wx><span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">checking weather…</span></div>
+        <div class="wxbox" data-wx><span style="color:var(--dim);font-family:var(--sans);font-size:10.5px">checking weather…</span></div>
 
         <div class="sech">What it pays — greater-of + OT bonus</div>
         <div class="otrow">
@@ -907,7 +911,7 @@ function render(parsed){
     // weather (free NWS METAR/TAF via Worker — no quota cost)
     const wxBox=card.querySelector('[data-wx]');
     function renderWx(arr,iataList){
-      if(!arr||!arr.length){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather unavailable</span>';return;}
+      if(!arr||!arr.length){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--sans);font-size:10.5px">weather unavailable</span>';return;}
       wxBox.innerHTML=arr.map((sn,i)=>{
         const cls=sn.level===2?'nogo':sn.level===1?'cau':'go';
         const code=(iataList&&iataList[i])||((sn.id&&sn.id.length===4&&sn.id[0]==='K')?sn.id.slice(1):sn.id);
@@ -917,7 +921,7 @@ function render(parsed){
     }
     async function loadWx(){
       if(!wxBox)return;
-      if(!CFG.workerUrl){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">set a Worker URL for weather</span>';return;}
+      if(!CFG.workerUrl){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--sans);font-size:10.5px">set a Worker URL for weather</span>';return;}
       const stations=[a.dest,...CFG.gateways.filter(g=>g.code).map(g=>g.code)];
       const fromMs=a.latestMs-6*3600e3, toMs=a.anchorMs+3600e3;
       const key=stations.join(',')+'|'+fromMs+'|'+toMs;
@@ -926,8 +930,8 @@ function render(parsed){
         const r=await fetch(`${CFG.workerUrl}?wx=${encodeURIComponent(stations.join(','))}&fromMs=${fromMs}&toMs=${toMs}`);
         const j=await r.json();
         if(j&&Array.isArray(j.wx)){WX_CACHE.set(key,j.wx);renderWx(j.wx,stations);}
-        else wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather unavailable — update your Worker</span>';
-      }catch(e){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather check failed</span>';}
+        else wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--sans);font-size:10.5px">weather unavailable — update your Worker</span>';
+      }catch(e){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--sans);font-size:10.5px">weather check failed</span>';}
     }
     loadWx();
     const startSel=card.querySelector('.js-startday');
@@ -1133,7 +1137,7 @@ function renderGwCfg(){
     `<div style="display:flex;gap:7px;align-items:center">
        <input data-i="${i}" data-k="code" value="${g.code}" placeholder="IAH" maxlength="4" style="flex:0 0 78px;text-transform:uppercase">
        <input data-i="${i}" data-k="drive" type="number" value="${g.drive}" style="flex:1;text-align:right" title="drive minutes from home">
-       <span style="font-family:var(--mono);font-size:10px;color:var(--dim)">min</span>
+       <span style="font-family:var(--sans);font-size:10px;color:var(--dim)">min</span>
        <button data-rm="${i}" class="btn ghost" style="padding:6px 9px;font-size:11px">✕</button>
      </div>`).join('');
   gwCfg.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
@@ -1154,12 +1158,12 @@ function renderFareCfg(){
   const ents=Object.entries(CFG.fares||{});
   fareCfg.innerHTML = ents.length ? ents.map(([k,v])=>
     `<div style="display:flex;gap:7px;align-items:center">
-       <input data-k="${k}" data-f="route" value="${k}" placeholder="IAH-ORD" maxlength="9" style="flex:0 0 108px;text-transform:uppercase;font-family:var(--mono);font-size:11px">
-       <span style="font-family:var(--mono);font-size:11px;color:var(--dim)">$</span>
+       <input data-k="${k}" data-f="route" value="${k}" placeholder="IAH-ORD" maxlength="9" style="flex:0 0 108px;text-transform:uppercase;font-family:var(--sans);font-size:11px">
+       <span style="font-family:var(--sans);font-size:11px;color:var(--dim)">$</span>
        <input data-k="${k}" data-f="amt" type="number" min="0" step="5" value="${v}" style="flex:1;text-align:right">
        <button data-rmf="${k}" class="btn ghost" style="padding:6px 9px;font-size:11px">✕</button>
      </div>`).join('')
-    : '<div style="font-family:var(--mono);font-size:10px;color:var(--dim)">None yet — add a route, or confirm a price on any flight to learn one.</div>';
+    : '<div style="font-family:var(--sans);font-size:10px;color:var(--dim)">None yet — add a route, or confirm a price on any flight to learn one.</div>';
   fareCfg.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',e=>{
     const oldK=e.target.dataset.k, row=e.target.parentNode;
     const route=row.querySelector('[data-f="route"]').value.toUpperCase().trim().replace(/[^A-Z0-9-]/g,'');
