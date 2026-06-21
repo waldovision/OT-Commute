@@ -263,6 +263,27 @@
   body{font-variant-numeric:tabular-nums}
   .brand,.sub,.btn,.field label,.win .k,.k,.sech,.summary,.fpill,.fbk,.lsk,.fbest,.lamp .v,.chip,details.cfg>summary{font-family:var(--display)}
   .zclock,.ftimes,.fprice,.fprice-row{font-family:var(--mono)}
+  /* commute substitution note (e.g. NLU → MEX + drive) */
+  .subnote{font-size:11px;line-height:1.55;color:var(--cau);background:rgba(255,206,74,.08);border-left:2px solid var(--cau);border-radius:4px;padding:8px 10px;margin:2px 0 10px}
+  .subnote b{color:#ffe08a}
+  /* decode-to-local panel */
+  #decodeOut{margin-top:10px}
+  .dl-empty{font-size:11.5px;color:var(--dim);padding:8px 2px}
+  .dl-wrap{border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:rgba(8,13,28,.5)}
+  .dl-hd{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tblue-lite);margin-bottom:8px}
+  .dl-close{font-size:11px;color:var(--muted);margin-bottom:10px}
+  .dl-trip{padding:9px 0;border-top:1px solid var(--line)}
+  .dl-trip:first-of-type{border-top:none;padding-top:2px}
+  .dl-pid{font-family:var(--display);font-size:12px;font-weight:600;color:var(--txt)}
+  .dl-rep{font-size:11px;color:var(--muted);margin:3px 0 7px}
+  .dl-sub{color:var(--cau)}
+  .dl-leg{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:11.5px;padding:3px 0;color:var(--txt)}
+  .dl-leg.dh{opacity:.62}
+  .dl-fl{font-family:var(--mono);font-weight:600;min-width:64px}
+  .dl-dh{font-family:var(--display);font-size:8.5px;letter-spacing:.06em;color:var(--dim);border:1px solid var(--line);border-radius:10px;padding:0 5px}
+  .dl-rt{font-family:var(--mono);color:var(--muted);min-width:78px}
+  .dl-tm{font-family:var(--mono);color:#cfe0ff}
+  .dl-ar{color:var(--dim)}
 </style>
 </head>
 <body>
@@ -350,7 +371,11 @@
 
   <div id="pasteWrap" style="display:none;margin-top:8px">
     <textarea id="paste" placeholder="Paste the body of the OT notification email here…"></textarea>
-    <button class="btn solid" id="runPaste" style="margin-top:8px">Analyze</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn solid" id="runPaste">Analyze</button>
+      <button class="btn ghost" id="decodeLocal">🕓 Decode to local</button>
+    </div>
+    <div id="decodeOut"></div>
   </div>
 
   <div id="manualWrap" style="display:none;margin-top:8px">
@@ -378,7 +403,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.2 · 2026-06-21 · AM/PM local times + Atlas-style type (Poppins/Inter)</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.3 · 2026-06-21 · NLU→MEX+drive routing · decode-to-local · AM/PM · Atlas type</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -405,6 +430,11 @@ const BUFFER_MIN=180, EARLY_MIN=24*60;
 const MON={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
 const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
+// Report fields with little/no commercial service → fly commercial into a nearby gateway, then drive.
+// driveMin is folded into the search deadline so a flight only counts if you can land + drive and still beat the −3h mark.
+const COMMUTE_SUB={
+  NLU:{via:'MEX',driveMin:45,note:'Santa Lucía (NLU/AIFA) has minimal commercial service'}
+};
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
 const DEFAULT_WORKER='https://ot-flights.ccwaldo.workers.dev';
 const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360, autoCheck:true, fares:{}, livePrices:true,
@@ -469,19 +499,25 @@ function parseEmail(raw){
 function analyze(t){
   const segs=t.segs; if(!segs.length)return{error:true};
   const firstDH=segs[0].dh, firstOp=segs.find(s=>!s.dh)||segs[0];
-  let anchorMs,dest,basis,dhOption=null;
+  let anchorMs,reportDest,basis,dhOption=null;
   if(!firstDH){
-    anchorMs=t.statedReportMs??(firstOp.stdMs-offsetMin()*6e4); dest=segs[0].dep;
+    anchorMs=t.statedReportMs??(firstOp.stdMs-offsetMin()*6e4); reportDest=segs[0].dep;
     basis=`First leg <b>${segs[0].flight}</b> operates — anchored on its report time.`;
   }else{
-    anchorMs=firstOp.stdMs-offsetMin()*6e4; dest=firstOp.dep;
+    anchorMs=firstOp.stdMs-offsetMin()*6e4; reportDest=firstOp.dep;
     const atlas=ATLAS.test(segs[0].flight);
     basis=`First leg <b>${segs[0].flight}</b> is a ${atlas?'possibly Atlas-operated':'commercial'} deadhead — `+
       (atlas?`that code can be Atlas metal, so you may be able to ride it (verify tail). Window anchored on first operating leg <b>${firstOp.flight}</b> (${firstOp.dep}).`
               :`go from home to the first operating leg <b>${firstOp.flight}</b> (${firstOp.dep}); no need to make the deadhead.`);
     if(atlas) dhOption={flight:segs[0].flight,origin:segs[0].dep,makeByMs:segs[0].stdMs-offsetMin()*6e4,depMs:segs[0].stdMs};
   }
-  return {dest,basis,anchorMs,latestMs:anchorMs-BUFFER_MIN*6e4,earliestMs:anchorMs-EARLY_MIN*6e4,dhOption};
+  const unionLatestMs=anchorMs-BUFFER_MIN*6e4;          // union land-by at the actual report field (−3h)
+  const sub=COMMUTE_SUB[reportDest];                     // e.g. NLU → fly MEX + drive
+  const dest=sub?sub.via:reportDest;                     // where commercial flights actually land / what we search
+  const driveMin=sub?sub.driveMin:0;
+  const subNote=sub?sub.note:null;
+  const latestMs=unionLatestMs-driveMin*6e4;             // a flight only counts if you can land here, drive, and still beat −3h
+  return {dest,reportDest,driveMin,subNote,basis,anchorMs,latestMs,unionLatestMs,earliestMs:anchorMs-EARLY_MIN*6e4,dhOption};
 }
 
 function bonusHours(startDay,tripDays){           // cumulative OT bonus credit: +2/+4/+6 by day, capped at day 3
@@ -626,10 +662,11 @@ function render(parsed){
         <div class="win">
           <div><div class="k">Earliest land</div><div class="t">${fzShort(a.earliestMs)}<br><small>${flocal(a.earliestMs)}</small></div></div>
           <div class="rep"><div class="k">Report (anchor)</div><div class="t">${fzShort(a.anchorMs)}<br><small>${flocal(a.anchorMs)}</small></div></div>
-          <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.latestMs)}<br><small>${flocal(a.latestMs)}</small><br><small class="countdown" data-until="${a.latestMs}" data-label="land"></small></div></div>
+          <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.unionLatestMs)}<br><small>${flocal(a.unionLatestMs)}</small><br><small class="countdown" data-until="${a.unionLatestMs}" data-label="land"></small></div></div>
         </div>
 
         <div class="sech">Commute to ${a.dest} — flights must land by ${fzShort(a.latestMs)} <span style="color:var(--dim)">(${flocal(a.latestMs)})</span></div>
+        ${a.subNote?`<div class="subnote">✈ ${a.subNote} — book a commercial flight into <b>${a.dest}</b>, then drive <b>~${a.driveMin} min</b> to ${a.reportDest}. Land ${a.dest} by <b>${fzShort(a.latestMs)}</b> so you reach ${a.reportDest} by the −3h mark (${fzShort(a.unionLatestMs)}).</div>`:''}
         ${CFG.gateways.filter(g=>g.code).map(g=>{
           const d1=dateStr(a.latestMs), d0=dateStr(a.earliestMs);
           const links=`<a class="search" href="${gflights(g.code,a.dest,d1)}" target="_blank" rel="noopener">${g.code}→${a.dest} ▸</a>`;
@@ -958,7 +995,7 @@ function render(parsed){
     const copyBtn=card.querySelector('.js-copy');
     copyBtn.addEventListener('click',()=>{
       const txt=`${t.pid} ${t.base||a.dest} ${t.equip} ${t.seat}\n`+
-        `Report ${fz(a.anchorMs)} | land by ${fz(a.latestMs)} | commute to ${a.dest}\n`+
+        `Report ${fz(a.anchorMs)} | land by ${fz(a.unionLatestMs)} | commute to ${a.dest}${a.subNote?` (→ drive ~${a.driveMin}m to ${a.reportDest})`:''}\n`+
         `Pays ${money(gross)} (${C.driver} ${(+C.hrs).toFixed(2)}h${C.bonusHrs?' +'+C.bonusHrs+'h OT bonus':''})`;
       const done=()=>{const o=copyBtn.textContent;copyBtn.textContent='✓ copied';setTimeout(()=>copyBtn.textContent=o,1400);};
       if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done));
@@ -1085,8 +1122,32 @@ document.getElementById('runManual').onclick=()=>{
   render({closeMs:null,trips:[LAST_MANUAL]});
 };
 document.getElementById('runPaste').onclick=()=>{OCR_USED=false;LAST_MANUAL=null;setStatus(null);runRaws([document.getElementById('paste').value]);};
+document.getElementById('decodeLocal').onclick=decodeToLocal;
 document.getElementById('sampleBtn').onclick=()=>{OCR_USED=false;LAST_MANUAL=null;setStatus(null);runRaws(Object.values(SAMPLES));};
-document.getElementById('clearBtn').onclick=()=>{document.getElementById('out').innerHTML='';document.getElementById('paste').value='';LAST_RAWS=null;LAST_MANUAL=null;};
+document.getElementById('clearBtn').onclick=()=>{document.getElementById('out').innerHTML='';document.getElementById('paste').value='';document.getElementById('decodeOut').innerHTML='';LAST_RAWS=null;LAST_MANUAL=null;};
+// Decode a pasted OT notice into local times (independent of the GO/NO-GO run)
+function decodeToLocal(){
+  const raw=document.getElementById('paste').value, out=document.getElementById('decodeOut');
+  if(!raw.trim()){ out.innerHTML='<div class="dl-empty">Paste an OT notice above first.</div>'; return; }
+  let parsed; try{ parsed=parseEmail(raw); }catch(e){ parsed=null; }
+  if(!parsed||!parsed.trips.length){ out.innerHTML='<div class="dl-empty">Couldn\'t find any trip segments to decode — check the pasted text.</div>'; return; }
+  const tzLabel=(TZS.find(z=>z[0]===CFG.tz)||[])[1]||CFG.tz;
+  const close=parsed.closeMs!=null?`<div class="dl-close">Bidding closes: <b>${flocal(parsed.closeMs)}</b></div>`:'';
+  out.innerHTML=`<div class="dl-wrap"><div class="dl-hd">Schedule in local time — ${tzLabel}</div>${close}`+
+    parsed.trips.map(t=>{
+      const a=analyze(t); const ok=a&&!a.error;
+      const rep=ok?`<div class="dl-rep">Report <b>${flocal(a.anchorMs)}</b> · land by <b>${flocal(a.unionLatestMs)}</b>${a.subNote?` <span class="dl-sub">— fly ${a.dest} + drive ~${a.driveMin}m to ${a.reportDest}</span>`:''}</div>`:'';
+      const legs=t.segs.map(s=>{
+        const blkH=hm(s.block), arrMs=(s.stdMs!=null&&blkH!=null)?s.stdMs+blkH*36e5:null;
+        return `<div class="dl-leg${s.dh?' dh':''}">`+
+          `<span class="dl-fl">${s.flight}${s.dh?' <span class="dl-dh">DH</span>':''}</span>`+
+          `<span class="dl-rt">${s.dep}→${s.arr}</span>`+
+          `<span class="dl-tm">${s.stdMs!=null?flocal(s.stdMs):s.std+'z'} <span class="dl-ar">→</span> ${arrMs!=null?flocal(arrMs):s.sta+'z'}</span>`+
+        `</div>`;
+      }).join('');
+      return `<div class="dl-trip"><div class="dl-pid">${t.pid}${t.equip?' · '+t.equip:''}${t.seat?' · '+t.seat:''}</div>${rep}${legs}</div>`;
+    }).join('')+`</div>`;
+}
 
 /* config UI */
 const $=id=>document.getElementById(id);
