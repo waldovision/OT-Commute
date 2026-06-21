@@ -131,6 +131,21 @@
   .fbanner{border:1px solid rgba(39,213,136,.55);border-radius:12px;padding:12px 13px;margin-bottom:11px;
     background:linear-gradient(135deg,rgba(39,213,136,.16),rgba(39,213,136,.05));box-shadow:0 0 26px -8px rgba(39,213,136,.55)}
   .fbk{font-family:var(--mono);font-size:11px;letter-spacing:.12em;font-weight:800;color:var(--go);text-transform:uppercase}
+  .lsafe{margin:8px 0;padding:9px 11px;border-radius:9px;border:1px solid rgba(58,142,224,.4);background:rgba(58,142,224,.09)}
+  .lsafe.solo{border-color:rgba(255,206,74,.5);background:rgba(255,206,74,.1)}
+  .lsk{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;font-weight:800;color:var(--tblue-lite);text-transform:uppercase}
+  .lsafe.solo .lsk{color:var(--cau)}
+  .lsv{font-family:var(--mono);font-size:11.5px;color:var(--txt);margin-top:5px}
+  .lsn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px;line-height:1.5}
+  .lsbadge{background:var(--tblue-lite)!important;color:#04223f!important}
+  .wxbox{display:flex;flex-direction:column;gap:5px;margin-top:4px}
+  .wxs{font-family:var(--mono);font-size:10.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .wxs b{color:var(--txt)}
+  .wxdot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+  .wxdot.go{background:var(--go)} .wxdot.cau{background:var(--cau)} .wxdot.nogo{background:var(--nogo)}
+  .wxl{font-weight:700;font-size:9.5px;letter-spacing:.08em}
+  .wxl.go{color:var(--go)} .wxl.cau{color:var(--cau)} .wxl.nogo{color:var(--nogo)}
+  .wxf{color:var(--dim)}
   .fbv{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:#dffaed;margin-top:7px}
   .fbn{font-family:var(--mono);font-size:10.5px;color:#8fcfb1;margin-top:6px}
   .fstrip.pin{border-color:rgba(39,213,136,.5);box-shadow:0 0 18px -10px rgba(39,213,136,.6)}
@@ -294,6 +309,9 @@
           <input id="maxConn" type="number" min="60" max="720" step="15" style="width:78px" title="longest connection shown">
         </div>
         <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px;line-height:1.5">Self-connect floor — 60 min is a safe carry-on minimum for a pilot (KCM). Anything under 60 is flagged ⚠ TIGHT. International hubs (customs) realistically need 2–3h.</div>
+        <label style="margin-top:9px;display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;color:var(--dim);cursor:pointer">
+          <input id="autoCheck" type="checkbox" style="width:auto"> Auto-check flights when a trip loads (drives the stoplight — uses quota)
+        </label>
       </div>
       <div>
         <label style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)">Your gateways — code &amp; drive time from home (min)</label>
@@ -337,7 +355,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 22 · 2026-06-21 · flight-driven stoplight: GO=company books · BUY=self-purchase · NO-GO=cant make it</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 25 · 2026-06-21 · last-safe-flight backup + TAF/METAR weather flags (free NWS, no quota)</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -366,13 +384,15 @@ const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 const ATLAS=/^(5Y|QF|TK|EY|PO)/i;   // codes that may be Atlas-operated metal
 const DEFAULT_WORKER='https://ot-flights.ccwaldo.workers.dev';
-const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360,
+const CFG={ fleet:'747', seat:'FO', yos:6, perDiem:3.90, tz:'America/Chicago', workerUrl:DEFAULT_WORKER, maxStops:1, minConn:60, maxConn:360, autoCheck:true,
   gateways:[{code:'IAH',drive:30},{code:'HOU',drive:60},{code:'CLL',drive:90},{code:'AUS',drive:165}],
   sortByPay:false, mySeatOnly:false, hidePast:false };
 const US_HUBS=new Set(['ATL','DFW','DEN','ORD','CLT','IAH','PHX','LAS','MSP','DTW','SLC','SEA','EWR','JFK','LGA','BOS','MIA','LAX','SFO','PHL','IAD','DCA','MDW','TPA','AUS','DAL','HOU','BNA','RDU','STL','MCI','CLE','CVG','PIT','IND','CMH','SAT','SJC','OAK','PDX','SMF','RSW','SDF','MEM','ABQ','ONT','BUR','HNL','BWI','SAN','FLL','MCO']);
 const LS_KEY='otcc_cfg_v1';
 function saveCfg(){try{localStorage.setItem(LS_KEY,JSON.stringify(CFG));}catch(e){}}
 function loadCfg(){try{const s=localStorage.getItem(LS_KEY);if(s)Object.assign(CFG,JSON.parse(s));}catch(e){} if(!CFG.workerUrl)CFG.workerUrl=DEFAULT_WORKER;}
+const SEARCH_CACHE=new Map();
+const WX_CACHE=new Map();
 loadCfg();
 
 function parseZ(s){const m=s.trim().match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
@@ -472,6 +492,11 @@ const p=n=>String(n).padStart(2,'0');
 const dur=mins=>{const s=mins<0?'-':'';mins=Math.abs(mins);return `${s}${Math.floor(mins/60)}h${p(mins%60)}`;};
 const gflights=(gw,dest,date)=>`https://www.google.com/travel/flights?q=`+encodeURIComponent(`Flights to ${dest} from ${gw} on ${date}`);
 const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+function fmtReset(ms){ try{
+  const when=new Intl.DateTimeFormat('en-US',{timeZone:CFG.tz,month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'}).format(new Date(ms));
+  const diff=ms-Date.now(); const d=Math.floor(diff/864e5); const h=Math.max(1,Math.round(diff/36e5));
+  return `${when} (~${d>0?d+'d':h+'h'})`;
+}catch(e){ return new Date(ms).toISOString(); } }
 function countUp(el,target,dur=750){
   if(!el)return;
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=money(target);return;}
@@ -525,7 +550,7 @@ function render(parsed){
     // verdict
     let cls,v,vs;
     if(now>=a.anchorMs){cls='nogo';v='NO-GO';vs='report time passed';}
-    else {cls='wait';v='—';vs=CFG.workerUrl?'tap Auto-search':'log a flight';}
+    else {cls='wait';v='—';vs=(CFG.autoCheck&&CFG.workerUrl)?'checking flights…':(CFG.workerUrl?'tap Auto-search':'log a flight');}
     const tripDays = t.days || Math.max(1, Math.ceil((t.tafb||24)/24));
     let startDay = 1;
     const computeC = sd => cost(t,rate,CFG.perDiem,bonusHours(sd,tripDays));
@@ -562,7 +587,7 @@ function render(parsed){
           <div class="hard"><div class="k">Land by (−3h)</div><div class="t">${fzShort(a.latestMs)}<br><small>${flocal(a.latestMs)}</small><br><small class="countdown" data-until="${a.latestMs}" data-label="land"></small></div></div>
         </div>
 
-        <div class="sech">Commute to ${a.dest} — flights must land by ${fzShort(a.latestMs)}</div>
+        <div class="sech">Commute to ${a.dest} — flights must land by ${fzShort(a.latestMs)} <span style="color:var(--dim)">(${flocal(a.latestMs)})</span></div>
         ${CFG.gateways.filter(g=>g.code).map(g=>{
           const d1=dateStr(a.latestMs), d0=dateStr(a.earliestMs);
           const links=`<a class="search" href="${gflights(g.code,a.dest,d1)}" target="_blank" rel="noopener">${g.code}→${a.dest} ▸</a>`;
@@ -570,7 +595,10 @@ function render(parsed){
           return `<div class="gw"><div class="code">${g.code}</div><div class="drive">drive <b>~${dur(g.drive)}</b> from home${dayBefore}</div>${links}</div>`;
         }).join('')}
 
-        ${a.dhOption?`<div class="dho">Alt: ride the company deadhead <b>${a.dhOption.flight}</b> from <b>${a.dhOption.origin}</b> — be in position by <b>${fzShort(a.dhOption.makeByMs)}</b> (${dateStr(a.dhOption.makeByMs)}). Commute to ${a.dhOption.origin} instead.</div>`:''}
+        ${a.dhOption?`<div class="dho">Alt: ride the company deadhead <b>${a.dhOption.flight}</b> from <b>${a.dhOption.origin}</b> — be in position by <b>${fzShort(a.dhOption.makeByMs)}</b> (${flocal(a.dhOption.makeByMs)}, ${dateStr(a.dhOption.makeByMs)}). Commute to ${a.dhOption.origin} instead.</div>`:''}
+
+        <div class="sech">Weather — gateways &amp; base near report</div>
+        <div class="wxbox" data-wx><span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">checking weather…</span></div>
 
         <div class="sech">What it pays — greater-of + OT bonus</div>
         <div class="otrow">
@@ -614,7 +642,7 @@ function render(parsed){
     if(!dopts.length)dopts.push(dateStr(a.latestMs));
     dSel.innerHTML=dopts.map(o=>`<option value="${o}"${o===dateStr(a.latestMs)?' selected':''}>${o.slice(5)}</option>`).join('');
 
-    const flights=[];
+    const flights=[]; let searched=false, quotaOut=null;
     const mk=(hhmm,d)=>{const dp=d.split('-');return Date.UTC(+dp[0],+dp[1]-1,+dp[2],+hhmm.slice(0,2),+hhmm.slice(2,4));};
     function classify(arrMs){
       if(arrMs<a.earliestMs)return['cau','TOO EARLY','arrives before the 24h window'];
@@ -630,7 +658,7 @@ function render(parsed){
     function lampState(){
       const tnow=Date.now();
       if(tnow>=a.anchorMs) return ['nogo','NO-GO','report time passed'];
-      if(!flights.length) return ['wait','—',CFG.workerUrl?'tap Auto-search':'log a flight'];
+      if(!flights.length){ if(quotaOut) return ['wait','—','API quota used up']; if(searched) return ['wait','—','no flights found — check route/date']; return ['wait','—',(CFG.autoCheck&&CFG.workerUrl)?'checking flights…':(CFG.workerUrl?'tap Auto-search':'log a flight')]; }
       const catchable=flights.filter(f=>(f.depMs - tnow) >= driveMs(f.gw)); // still bookable, drive time accounted
       const compliant=catchable.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs);
       if(compliant.length){
@@ -665,6 +693,15 @@ function render(parsed){
       // fallbacks if no nonstop fits: latest 1-2 compliant of any kind
       const compliant=[...flights].filter(inWin).sort((x,y)=>x.arrMs-y.arrMs);
       const backups=compliant.slice(-2).map(f=>f.id);
+      // LAST SAFE FLIGHT = latest-departing flight that still complies AND is still catchable
+      const now2=Date.now();
+      const safeList=[...flights].filter(f=>inWin(f) && (f.depMs-now2)>=driveMs(f.gw)).sort((x,y)=>x.depMs-y.depMs);
+      const lastSafe=safeList[safeList.length-1];
+      const lastSafeBanner = lastSafe ? `<div class="lsafe${safeList.length>1?'':' solo'}">
+          <div class="lsk">🛟 LAST SAFE FLIGHT${safeList.length>1?` · ${safeList.length} options`:' · no backup'}</div>
+          <div class="lsv"><b>${lastSafe.carrier}${lastSafe.num}</b> · ${lastSafe.gw}→${a.dest}${lastSafe.via?` via ${lastSafe.via}`:''} · dep <b>${zt(lastSafe.depMs)}</b> ${flocal(lastSafe.depMs)} · lands ${zt(lastSafe.arrMs)}</div>
+          <div class="lsn">leave home by <b>${flocal(lastSafe.depMs-driveMs(lastSafe.gw))}</b> · ${safeList.length>1?'your last shot if earlier options fall through':'⚠ the only flight that makes your window — zero margin'}</div>
+        </div>` : '';
 
       const banner = bestNs ? `<div class="fbanner">
           <div class="fbk">✈ NONSTOP fits your window</div>
@@ -673,7 +710,7 @@ function render(parsed){
           <div class="fbn">lands ${dur((a.anchorMs-bestNs.arrMs)/6e4)} before report · most rest of the nonstops that comply</div>
         </div>` : '';
 
-      list.innerHTML = banner + sorted.map(f=>{
+      list.innerHTML = banner + lastSafeBanner + sorted.map(f=>{
         const [ec,lab,note]=classify(f.arrMs);
         const stopPill = f.stops===0 ? '<span class="fpill nonstop">NONSTOP</span>'
                         : (f.stops>0 ? `<span class="fpill stop">${f.stops} STOP${f.stops>1?'S':''}</span>` : '');
@@ -689,7 +726,7 @@ function render(parsed){
           let parts=[], tightest=Infinity;
           for(let i=0;i<f.legs.length;i++){
             const L=f.legs[i];
-            parts.push(`<span>${L.carrier}${L.num} ${L.from}→${L.to} · arr ${zt(Date.parse(L.arr))}</span>`);
+            parts.push(`<span>${L.carrier}${L.num} ${L.from}→${L.to} · arr ${zt(Date.parse(L.arr))} ${flocal(Date.parse(L.arr))}</span>`);
             if(i<f.legs.length-1){ const lay=Date.parse(f.legs[i+1].dep)-Date.parse(L.arr); tightest=Math.min(tightest,lay); parts.push(`<span class="flay${lay<60*6e4?' warn':''}">⟳ ${dur(lay/6e4)} in ${L.to}</span>`); }
           }
           const intl=hubs.some(h=>!US_HUBS.has(h));
@@ -701,7 +738,7 @@ function render(parsed){
           connLine=`<div class="fconn${tight?' tight':''}">${parts.join('')}<span class="fcav">${cav}</span></div>`;
         }
         return `<div class="fstrip ${ec}${(bestNs&&f.id===bestNs.id)?' pin':''}">
-          <div class="fhd">${logo}<b>${f.carrier}${f.num}</b><span class="fpill ${ec}">${lab}</span>${stopPill}${tightPill}${star?`<span class="fbest">${star}</span>`:''}<button class="frm" data-id="${f.id}">✕</button></div>
+          <div class="fhd">${logo}<b>${f.carrier}${f.num}</b><span class="fpill ${ec}">${lab}</span>${stopPill}${tightPill}${star?`<span class="fbest">${star}</span>`:''}${lastSafe&&f.id===lastSafe.id?`<span class="fbest lsbadge">🛟 last safe</span>`:''}<button class="frm" data-id="${f.id}">✕</button></div>
           <div class="frt">${routeLine}</div>
           <div class="ftimes"><span>dep <b>${zt(f.depMs)}</b> ${flocal(f.depMs)}</span><span>arr <b>${zt(f.arrMs)}</b> ${flocal(f.arrMs)}</span></div>
           ${connLine}
@@ -727,27 +764,38 @@ function render(parsed){
     const fstat=q('.f-status');
     const setFstat=(msg,kind)=>{if(!msg){fstat.style.display='none';return;}fstat.style.display='block';fstat.className='f-status '+(kind||'');fstat.textContent=msg;};
     const autoBtn=q('.f-auto');
-    if(autoBtn) autoBtn.addEventListener('click',async()=>{
+    const cacheKey=`${a.dest}|${a.latestMs}|${CFG.maxStops}|${CFG.minConn}|${CFG.maxConn}|${CFG.gateways.filter(g=>g.code).map(g=>g.code).join(',')}`;
+    async function runAuto(){
       if(!CFG.workerUrl){setFstat('Set your Worker URL in Settings to auto-search.','err');return;}
-      autoBtn.disabled=true; const lbl=autoBtn.textContent; autoBtn.textContent='Searching…'; setFstat('Searching nonstops + connections…');
+      const lbl=autoBtn?autoBtn.textContent:'🔎 Auto-search'; if(autoBtn){autoBtn.disabled=true;autoBtn.textContent='Searching…';} setFstat('Searching nonstops + connections…');
+      quotaOut=null;
       const gws=CFG.gateways.filter(g=>g.code).map(g=>g.code);
-      let got=[],errs=0,skipped=0,depthInfo=null;
+      let got=[],errs=0,skipped=0,depthInfo=null,quotaRemaining=null;
       try{
         const res=await fetch(`${CFG.workerUrl}?origins=${encodeURIComponent(gws.join(','))}&dest=${encodeURIComponent(a.dest)}&arriveBy=${a.latestMs}&maxStops=${CFG.maxStops}&minConn=${CFG.minConn}&maxConn=${CFG.maxConn}`);
         const j=await res.json();
+        if(j&&j.quota&&j.quota.exceeded){
+          quotaOut={resetAt:j.quota.resetAt||null}; searched=true; renderFlights();
+          const when=j.quota.resetAt?` · resets ${fmtReset(j.quota.resetAt)}`:'';
+          setFstat(`API monthly quota used up${when}. Auto-search paused — log flights by hand until it resets.`,'err');
+          if(autoBtn){autoBtn.disabled=false; autoBtn.textContent=lbl;}
+          return;
+        }
+        quotaRemaining=(j&&j.quotaRemaining!=null)?j.quotaRemaining:null;
         if(j&&Array.isArray(j.flights)){
           depthInfo={effMax:j.maxStops,reqMax:(j.requestedMaxStops!=null?j.requestedMaxStops:CFG.maxStops),hasNonstop:!!j.hasNonstop};
           for(const f of j.flights){
             if(!f.tzKnown||!f.arr){skipped++;continue;}
             got.push({id:'a'+(f.gw||'')+f.carrier+f.num+f.dep+(f.via||''),carrier:f.carrier,num:f.num,gw:f.gw||'',depMs:Date.parse(f.dep),arrMs:Date.parse(f.arr),price:(f.price!=null?+f.price:null),stops:(typeof f.stops==='number'?f.stops:null),via:f.via||null,legs:Array.isArray(f.legs)?f.legs:null,auto:true});
           }
+          SEARCH_CACHE.set(cacheKey,got);
         } else { errs++; if(j&&j.error)setFstat('Worker: '+j.error,'err'); }
       }catch(e){ errs++; }
       const manual=flights.filter(f=>!f.auto);
       const keys=new Set(manual.map(f=>f.carrier+f.num+f.depMs+(f.via||'')));
       flights.length=0; manual.forEach(f=>flights.push(f));
       for(const f of got){const k=f.carrier+f.num+f.depMs+(f.via||''); if(!keys.has(k)){keys.add(k);flights.push(f);}}
-      renderFlights();
+      searched=true; renderFlights();
       const auto=flights.filter(f=>f.auto), ns=auto.filter(f=>f.stops===0).length, cx=auto.filter(f=>f.stops>=1).length;
       const comply=auto.filter(f=>f.arrMs>=a.earliestMs&&f.arrMs<=a.latestMs).length;
       let msg=`Found ${ns} nonstop${ns===1?'':'s'}${cx?` + ${cx} connection${cx===1?'':'s'}`:''} · ${comply} comply`;
@@ -755,9 +803,48 @@ function render(parsed){
       if(skipped)msg+=` · ${skipped} skipped (airport tz unknown)`;
       if(errs)msg+=` · search error — check Worker URL/key`;
       if(!auto.length&&!errs)msg='Nothing returned for those gateways — try manual, or confirm a route runs that day.';
+      if(quotaRemaining!=null&&+quotaRemaining<=25)msg+=` · ⚠ ${quotaRemaining} searches left this month`;
       setFstat(msg, auto.length?'ok':'err');
-      autoBtn.disabled=false; autoBtn.textContent=lbl;
-    });
+      if(autoBtn){autoBtn.disabled=false; autoBtn.textContent=lbl;}
+    }
+    if(autoBtn) autoBtn.addEventListener('click',runAuto);
+    // prime the stoplight from real flights: reuse cached results, else auto-check on load
+    if(SEARCH_CACHE.has(cacheKey)){
+      const cached=SEARCH_CACHE.get(cacheKey);
+      const mkeys=new Set(flights.filter(f=>!f.auto).map(f=>f.carrier+f.num+f.depMs+(f.via||'')));
+      for(const f of cached){const k=f.carrier+f.num+f.depMs+(f.via||''); if(!mkeys.has(k)){mkeys.add(k);flights.push(f);}}
+      searched=true; renderFlights();
+      if(cached.length)setFstat(`${cached.length} flight${cached.length===1?'':'s'} found earlier · tap Auto-search to refresh`,'ok');
+    } else if(CFG.autoCheck && CFG.workerUrl && now<a.anchorMs){
+      runAuto();
+    }
+
+    // weather (free NWS METAR/TAF via Worker — no quota cost)
+    const wxBox=card.querySelector('[data-wx]');
+    function renderWx(arr,iataList){
+      if(!arr||!arr.length){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather unavailable</span>';return;}
+      wxBox.innerHTML=arr.map((sn,i)=>{
+        const cls=sn.level===2?'nogo':sn.level===1?'cau':'go';
+        const code=(iataList&&iataList[i])||((sn.id&&sn.id.length===4&&sn.id[0]==='K')?sn.id.slice(1):sn.id);
+        const flags=(sn.flags&&sn.flags.length)?sn.flags.join(' · '):(sn.hasData?'no hazards in window':'no data');
+        return `<div class="wxs"><span class="wxdot ${cls}"></span><b>${code}</b> <span class="wxl ${cls}">${sn.hasData?sn.label:'—'}</span> <span class="wxf">${flags}</span></div>`;
+      }).join('');
+    }
+    async function loadWx(){
+      if(!wxBox)return;
+      if(!CFG.workerUrl){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">set a Worker URL for weather</span>';return;}
+      const stations=[a.dest,...CFG.gateways.filter(g=>g.code).map(g=>g.code)];
+      const fromMs=a.latestMs-6*3600e3, toMs=a.anchorMs+3600e3;
+      const key=stations.join(',')+'|'+fromMs+'|'+toMs;
+      if(WX_CACHE.has(key)){renderWx(WX_CACHE.get(key),stations);return;}
+      try{
+        const r=await fetch(`${CFG.workerUrl}?wx=${encodeURIComponent(stations.join(','))}&fromMs=${fromMs}&toMs=${toMs}`);
+        const j=await r.json();
+        if(j&&Array.isArray(j.wx)){WX_CACHE.set(key,j.wx);renderWx(j.wx,stations);}
+        else wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather unavailable — update your Worker</span>';
+      }catch(e){wxBox.innerHTML='<span style="color:var(--dim);font-family:var(--mono);font-size:10.5px">weather check failed</span>';}
+    }
+    loadWx();
     const startSel=card.querySelector('.js-startday');
     const renderCost=()=>{
       startDay=+startSel.value;
@@ -950,6 +1037,8 @@ if(maxStopsSel){ maxStopsSel.value=String(CFG.maxStops); maxStopsSel.addEventLis
 const minConnIn=document.getElementById('minConn'), maxConnIn=document.getElementById('maxConn');
 if(minConnIn){ minConnIn.value=CFG.minConn; minConnIn.addEventListener('change',()=>{CFG.minConn=Math.max(20,Math.min(240,+minConnIn.value||60)); minConnIn.value=CFG.minConn; saveCfg(); reRender();}); }
 if(maxConnIn){ maxConnIn.value=CFG.maxConn; maxConnIn.addEventListener('change',()=>{CFG.maxConn=Math.max(CFG.minConn+30,Math.min(720,+maxConnIn.value||360)); maxConnIn.value=CFG.maxConn; saveCfg(); reRender();}); }
+const autoCheckIn=document.getElementById('autoCheck');
+if(autoCheckIn){ autoCheckIn.checked=!!CFG.autoCheck; autoCheckIn.addEventListener('change',()=>{CFG.autoCheck=autoCheckIn.checked; saveCfg();}); }
 
 const gwCfg=$('gwCfg');
 function renderGwCfg(){
