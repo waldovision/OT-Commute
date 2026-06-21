@@ -778,14 +778,14 @@ function render(parsed){
       const lastSafe=safeList[safeList.length-1];
       const lastSafeBanner = lastSafe ? `<div class="lsafe${safeList.length>1?'':' solo'}">
           <div class="lsk">🛟 LAST SAFE FLIGHT${safeList.length>1?` · ${safeList.length} options`:' · no backup'}</div>
-          <div class="lsv"><b>${lastSafe.carrier}${lastSafe.num}</b> · ${lastSafe.gw}→${a.dest}${lastSafe.via?` via ${lastSafe.via}`:''} · dep <b>${zt(lastSafe.depMs)}</b> ${flocal(lastSafe.depMs)} · lands ${zt(lastSafe.arrMs)}</div>
+          <div class="lsv"><b>${lastSafe.carrier}${lastSafe.num}</b> · ${lastSafe.gw}→${a.dest}${lastSafe.via?` via ${lastSafe.via}`:''} · dep <b>${zt(lastSafe.depMs)}</b> ${flocal(lastSafe.depMs)} · lands <b>${zt(lastSafe.arrMs)}</b> ${flocal(lastSafe.arrMs)}</div>
           <div class="lsn">leave home by <b>${flocal(lastSafe.depMs-driveMs(lastSafe.gw))}</b> · ${safeList.length>1?'your last shot if earlier options fall through':'⚠ the only flight that makes your window — zero margin'}</div>
         </div>` : '';
 
       const banner = bestNs ? `<div class="fbanner">
           <div class="fbk">✈ NONSTOP fits your window</div>
           <div class="fbv">${airlineLogo(bestNs.carrier)}
-            <b>${bestNs.carrier}${bestNs.num}</b> · ${bestNs.gw}→${a.dest} · arr <b>${zt(bestNs.arrMs)}</b> ${flocal(bestNs.arrMs)}${bestNs.price!=null?` · ${bestNs.est?'≈':''}${money(bestNs.price)}`:''}</div>
+            <b>${bestNs.carrier}${bestNs.num}</b> · ${bestNs.gw}→${a.dest} · dep <b>${zt(bestNs.depMs)}</b> ${flocal(bestNs.depMs)} · arr <b>${zt(bestNs.arrMs)}</b> ${flocal(bestNs.arrMs)}${bestNs.price!=null?` · ${bestNs.est?'≈':''}${money(bestNs.price)}`:''}</div>
           <div class="fbn">lands ${dur((a.anchorMs-bestNs.arrMs)/6e4)} before report · most rest of the nonstops that comply</div>
         </div>` : '';
 
