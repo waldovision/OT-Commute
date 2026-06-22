@@ -403,7 +403,7 @@
   <div id="out"></div>
 
   <div class="foot">
-    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.3 · 2026-06-21 · NLU→MEX+drive routing · decode-to-local · AM/PM · Atlas type</div>
+    <div style="color:var(--tyellow);margin-bottom:8px">BUILD 27.4 · 2026-06-21 · OT bonus counts duty days on 0700z boundary · NLU→MEX · decode-to-local</div>
     Decision aid only — verify against the MOU, your CBA, and Crew Scheduling. Reads Outlook-exported <b>.pdf</b> or <b>.eml</b> (true text only, not scanned images). Pay = greater-of credit / block / CRT × your rate + per diem on TAFB + OT bonus credit (+2/+4/+6 by trip-day, auto-added from day one; use the per-trip dropdown to start the ramp at +4 or +6, or turn it off). <b>No Open Time % premium</b> is applied (none exists in Art. 3). Codes <b>5Y / QF / TK / EY / PO</b> may be Atlas-operated metal — flagged "verify tail," not auto-treated as a paid commercial ticket. It does not pull live seats or fares; tap a gateway, then bring the price back to the evaluator. Report offset is by fleet (747/777 1:30, 767/737 1:00); "one calendar day" treated as 24:00; per diem is an editable estimate.
   </div>
 </div>
@@ -526,6 +526,18 @@ function bonusHours(startDay,tripDays){           // cumulative OT bonus credit:
   for(let d=startDay; d<=Math.min(3,startDay+Math.max(1,tripDays)-1); d++) h+=tier[d-1];
   return h;
 }
+const DAY_BOUNDARY_Z=7;                            // contractual day runs 0700z → 0700z
+const zDayIndex=ms=>Math.floor((ms-DAY_BOUNDARY_Z*3600*1000)/864e5);
+function dutyDays(t,anchorMs){                     // # of 0700z-bounded days the trip touches, report → last-leg release
+  let endMs=null;
+  for(const s of (t.segs||[])){
+    if(s.stdMs==null)continue;
+    const blkH=hm(s.block), arr=blkH!=null?s.stdMs+blkH*36e5:s.stdMs;
+    if(endMs==null||arr>endMs)endMs=arr;
+  }
+  if(anchorMs==null||endMs==null) return t.days||Math.max(1,Math.ceil((t.tafb||24)/24));
+  return Math.max(1, zDayIndex(endMs)-zDayIndex(anchorMs)+1);
+}
 function cost(t,rate,pd,bonusHrs){
   // pay = greatest of credit / block / CRT hours × rate, + per diem on TAFB, + OT bonus credit (additive)
   bonusHrs=bonusHrs||0;
@@ -599,7 +611,7 @@ function render(parsed){
   out.appendChild(head);
 
   // prepare + filter + sort
-  const grossOf=t=>cost(t,rate,CFG.perDiem,bonusHours(1,t.days||Math.max(1,Math.ceil((t.tafb||24)/24)))).gross;
+  const grossOf=t=>{const aa=analyze(t);return cost(t,rate,CFG.perDiem,bonusHours(1,dutyDays(t,aa&&aa.anchorMs))).gross;};
   let rows=parsed.trips.filter(t=>!analyze(t).error);
   const total=rows.length;
   rows=rows.filter(t=>!(CFG.mySeatOnly&&t.seat!==CFG.seat) && !(CFG.hidePast&&Date.now()>=analyze(t).anchorMs));
@@ -629,7 +641,7 @@ function render(parsed){
     let cls,v,vs;
     if(now>=a.anchorMs){cls='nogo';v='NO-GO';vs='report time passed';}
     else {cls='wait';v='—';vs=(CFG.autoCheck&&CFG.workerUrl)?'checking flights…':(CFG.workerUrl?'tap Auto-search':'log a flight');}
-    const tripDays = t.days || Math.max(1, Math.ceil((t.tafb||24)/24));
+    const tripDays = dutyDays(t, a.anchorMs);
     let startDay = 1;
     const computeC = sd => cost(t,rate,CFG.perDiem,bonusHours(sd,tripDays));
     let C = computeC(startDay); let gross = C.gross;
@@ -688,7 +700,7 @@ function render(parsed){
             <option value="3">Day 3 (+6 first)</option>
             <option value="0">None</option>
           </select>
-          <span class="otsub">trip ≈ ${tripDays} day${tripDays>1?'s':''}</span>
+          <span class="otsub" title="Duty days counted on a 0700z–0700z boundary, report to release">trip ≈ ${tripDays} day${tripDays>1?'s':''} · 0700z</span>
         </div>
         <div class="costline js-costline"></div>
 
